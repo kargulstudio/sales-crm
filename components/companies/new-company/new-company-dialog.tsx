@@ -105,6 +105,8 @@ export default function NewCompanyDialog() {
     };
 
     addCompany(company);
+    setForm(EMPTY_FORM);
+    setNameError(null);
   }
 
   return (
