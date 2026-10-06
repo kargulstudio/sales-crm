@@ -1,70 +1,101 @@
 "use client";
 
-import type { ComponentProps } from "react";
-import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
+import { useEffect, useRef, type ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
-type ScrollAreaProps = ComponentProps<typeof ScrollAreaPrimitive.Root> & {
+const FADE_SIZE = 24;
+
+type ScrollAreaProps = ComponentProps<"div"> & {
   orientation?: "vertical" | "horizontal" | "both";
   viewportClassName?: string;
+  fade?: boolean;
 };
 
 function ScrollArea({
   className,
   viewportClassName,
   orientation = "vertical",
-  type = "hover",
-  scrollHideDelay = 600,
+  fade = false,
   children,
   ...props
 }: ScrollAreaProps) {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const isVertical = orientation !== "horizontal";
+  const isHorizontal = orientation !== "vertical";
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!fade || !viewport) return;
+
+    function update() {
+      if (!viewport) return;
+      if (isVertical) {
+        const remaining =
+          viewport.scrollHeight - viewport.clientHeight - viewport.scrollTop;
+        viewport.style.setProperty(
+          "--fade-y-start",
+          `${Math.max(0, Math.min(viewport.scrollTop, FADE_SIZE))}px`,
+        );
+        viewport.style.setProperty(
+          "--fade-y-end",
+          `${Math.max(0, Math.min(remaining, FADE_SIZE))}px`,
+        );
+      }
+      if (isHorizontal) {
+        const remaining =
+          viewport.scrollWidth - viewport.clientWidth - viewport.scrollLeft;
+        viewport.style.setProperty(
+          "--fade-x-start",
+          `${Math.max(0, Math.min(viewport.scrollLeft, FADE_SIZE))}px`,
+        );
+        viewport.style.setProperty(
+          "--fade-x-end",
+          `${Math.max(0, Math.min(remaining, FADE_SIZE))}px`,
+        );
+      }
+    }
+
+    update();
+    viewport.addEventListener("scroll", update, { passive: true });
+    const observer = new ResizeObserver(update);
+    observer.observe(viewport);
+    Array.from(viewport.children).forEach((child) => observer.observe(child));
+
+    return () => {
+      viewport.removeEventListener("scroll", update);
+      observer.disconnect();
+    };
+  }, [fade, isVertical, isHorizontal]);
+
   return (
-    <ScrollAreaPrimitive.Root
+    <div
       data-slot="scroll-area"
-      type={type}
-      scrollHideDelay={scrollHideDelay}
       className={cn("relative overflow-hidden", className)}
       {...props}
     >
-      <ScrollAreaPrimitive.Viewport
+      <div
+        ref={viewportRef}
         data-slot="scroll-area-viewport"
         className={cn(
-          "size-full rounded-[inherit] outline-none [&>div]:block!",
+          "size-full rounded-[inherit] outline-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          isVertical ? "overflow-y-auto" : "overflow-y-hidden",
+          isHorizontal ? "overflow-x-auto" : "overflow-x-hidden",
+          fade &&
+            orientation === "vertical" &&
+            "[mask-image:linear-gradient(to_bottom,transparent,#000_var(--fade-y-start,0px),#000_calc(100%_-_var(--fade-y-end,0px)),transparent)]",
+          fade &&
+            orientation === "horizontal" &&
+            "[mask-image:linear-gradient(to_right,transparent,#000_var(--fade-x-start,0px),#000_calc(100%_-_var(--fade-x-end,0px)),transparent)]",
+          fade &&
+            orientation === "both" &&
+            "[mask-image:linear-gradient(to_bottom,transparent,#000_var(--fade-y-start,0px),#000_calc(100%_-_var(--fade-y-end,0px)),transparent),linear-gradient(to_right,transparent,#000_var(--fade-x-start,0px),#000_calc(100%_-_var(--fade-x-end,0px)),transparent)] [mask-composite:intersect] [-webkit-mask-composite:source-in]",
           viewportClassName,
         )}
       >
         {children}
-      </ScrollAreaPrimitive.Viewport>
-      {orientation !== "horizontal" && <ScrollBar orientation="vertical" />}
-      {orientation !== "vertical" && <ScrollBar orientation="horizontal" />}
-      <ScrollAreaPrimitive.Corner />
-    </ScrollAreaPrimitive.Root>
+      </div>
+    </div>
   );
 }
 
-function ScrollBar({
-  className,
-  orientation = "vertical",
-  ...props
-}: ComponentProps<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>) {
-  return (
-    <ScrollAreaPrimitive.ScrollAreaScrollbar
-      data-slot="scroll-area-scrollbar"
-      orientation={orientation}
-      className={cn(
-        "data-[state=hidden]:animate-out data-[state=hidden]:fade-out-0 data-[state=hidden]:ease-power3-in data-[state=visible]:animate-in data-[state=visible]:fade-in-0 data-[state=visible]:ease-power3-out z-20 flex touch-none p-0.5 select-none data-[state=hidden]:duration-200 data-[state=visible]:duration-150",
-        orientation === "vertical" && "h-full w-2",
-        orientation === "horizontal" && "h-2 flex-col",
-        className,
-      )}
-      {...props}
-    >
-      <ScrollAreaPrimitive.ScrollAreaThumb
-        data-slot="scroll-area-thumb"
-        className="ease-power3-out relative flex-1 rounded-full bg-white/20 transition-[background-color] duration-150 hover:bg-white/35 active:bg-white/40"
-      />
-    </ScrollAreaPrimitive.ScrollAreaScrollbar>
-  );
-}
-
-export { ScrollArea, ScrollBar };
+export { ScrollArea };

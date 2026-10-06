@@ -36,12 +36,15 @@ function DropdownMenuContent({
         sideOffset={sideOffset}
         align={align}
         className={cn(
-          "border-line-strong bg-popover text-popover-foreground data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:ease-power3-in data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:ease-power3-out z-50 min-w-[168px] overflow-hidden rounded-lg border shadow-overlay duration-200 data-[state=closed]:duration-150",
+          "border-line-strong bg-popover text-popover-foreground data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:ease-power3-in data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:ease-power3-out shadow-overlay z-50 min-w-[168px] overflow-hidden rounded-lg border duration-200 data-[state=closed]:duration-150",
           className,
         )}
         {...props}
       >
-        <ScrollArea viewportClassName="max-h-[min(360px,var(--radix-dropdown-menu-content-available-height))]">
+        <ScrollArea
+          fade
+          viewportClassName="max-h-[min(360px,var(--radix-dropdown-menu-content-available-height))]"
+        >
           <div className="p-1">{children}</div>
         </ScrollArea>
       </DropdownMenuPrimitive.Content>

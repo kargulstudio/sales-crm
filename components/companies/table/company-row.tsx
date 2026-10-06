@@ -9,7 +9,12 @@ import { TableCell, TableRow } from "@/components/_ui/table";
 import SegmentBar from "@/components/_common/segment-bar";
 import Sparkline from "@/components/_common/sparkline";
 import { TAG_TONES, ownerByName, type Company } from "@/data/companies";
-import { formatDate, formatMoney, splitTags } from "@/lib/companies";
+import {
+  formatDate,
+  formatMoney,
+  splitTags,
+  type CompanySummary,
+} from "@/lib/companies";
 import { cn } from "@/lib/utils";
 import {
   TABLE_CELL_CLASS,
@@ -22,6 +27,7 @@ import DotsIcon from "@/public/assets/images/companies/table/dots-horizontal.svg
 
 type CompanyRowProps = {
   company: Company;
+  summary: CompanySummary;
   selected: boolean;
   active: boolean;
   onToggle: () => void;
@@ -39,6 +45,7 @@ function stop(event: MouseEvent) {
 
 export default function CompanyRow({
   company,
+  summary,
   selected,
   active,
   onToggle,
@@ -96,35 +103,41 @@ export default function CompanyRow({
         </Button>
       </TableCell>
       <TableCell role="cell" className={cellClass("openDeals")}>
-        {company.openDeals}
+        {summary.openDeals}
       </TableCell>
       <TableCell role="cell" className={cellClass("pipelineValue")}>
         <span className="flex items-center gap-1">
           <span className="text-muted-foreground">$</span>
-          {formatMoney(company.pipelineValue)}
+          {formatMoney(summary.pipelineValue)}
         </span>
       </TableCell>
       <TableCell role="cell" className={cellClass("winProbability")}>
         <span className="flex items-center gap-2">
-          <SegmentBar percent={company.winProbability} className="w-[74px]" />
-          <span className="w-[4ch] text-right">{company.winProbability}%</span>
+          <SegmentBar percent={summary.win ?? 0} className="w-[74px]" />
+          <span className="w-[4ch] text-right">
+            {summary.win === null ? "—" : `${summary.win}%`}
+          </span>
         </span>
       </TableCell>
       <TableCell role="cell" className={cellClass("trend")}>
-        <Sparkline values={company.trend} />
+        <Sparkline values={summary.trend} />
       </TableCell>
       <TableCell role="cell" className={cellClass("lastInteraction")}>
-        <span className="flex items-center gap-1">
-          <CalendarIcon
-            aria-hidden
-            className="text-foreground size-3.5 shrink-0"
-          />
-          <span className="tabular-nums">
-            {formatDate(company.lastInteraction.date)}
+        {summary.lastActivity ? (
+          <span className="flex items-center gap-1">
+            <CalendarIcon
+              aria-hidden
+              className="text-foreground size-3.5 shrink-0"
+            />
+            <span className="tabular-nums">
+              {formatDate(summary.lastActivity.date)}
+            </span>
+            <span aria-hidden className="mx-[3px] h-2 w-px bg-white/15" />
+            {summary.lastActivity.label}
           </span>
-          <span aria-hidden className="mx-[3px] h-2 w-px bg-white/15" />
-          {company.lastInteraction.label}
-        </span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
       </TableCell>
       <TableCell role="cell" className={cellClass("action")} onClick={stop}>
         <Button

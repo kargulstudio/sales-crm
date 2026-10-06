@@ -7,7 +7,12 @@ import { CommandItem } from "@/components/_ui/command";
 import Tag from "@/components/_ui/tag";
 import SegmentBar from "@/components/_common/segment-bar";
 import { TAG_TONES, ownerByName, type Company } from "@/data/companies";
-import { formatDate, formatMoney, splitTags } from "@/lib/companies";
+import {
+  formatDate,
+  formatMoney,
+  splitTags,
+  type CompanySummary,
+} from "@/lib/companies";
 import { cn } from "@/lib/utils";
 import CalendarIcon from "@/public/assets/images/_common/calendar.svg";
 
@@ -47,11 +52,13 @@ export function CommandTableHeader() {
 
 type CommandCompanyRowProps = {
   company: Company;
+  summary: CompanySummary;
   onSelect: () => void;
 };
 
 export function CommandCompanyRow({
   company,
+  summary,
   onSelect,
 }: CommandCompanyRowProps) {
   const owner = ownerByName(company.owner);
@@ -105,21 +112,32 @@ export function CommandCompanyRow({
 
       <span className="flex items-center justify-end gap-1 tabular-nums">
         <span className="text-muted-foreground">$</span>
-        {formatMoney(company.pipelineValue)}
+        {formatMoney(summary.pipelineValue)}
       </span>
 
       <span className="hidden items-center justify-end gap-2 tabular-nums lg:flex">
-        <SegmentBar percent={company.winProbability} className="w-[60px]" />
-        <span className="w-[4ch] text-right">{company.winProbability}%</span>
+        <SegmentBar percent={summary.win ?? 0} className="w-[60px]" />
+        <span className="w-[4ch] text-right">
+          {summary.win === null ? "—" : `${summary.win}%`}
+        </span>
       </span>
 
       <span className="text-soft hidden min-w-0 items-center gap-1 lg:flex">
-        <CalendarIcon aria-hidden className="size-3.5 shrink-0" />
-        <span className="shrink-0 tabular-nums">
-          {formatDate(company.lastInteraction.date)}
-        </span>
-        <span aria-hidden className="mx-[3px] h-2 w-px shrink-0 bg-white/15" />
-        <span className="truncate">{company.lastInteraction.label}</span>
+        {summary.lastActivity ? (
+          <>
+            <CalendarIcon aria-hidden className="size-3.5 shrink-0" />
+            <span className="shrink-0 tabular-nums">
+              {formatDate(summary.lastActivity.date)}
+            </span>
+            <span
+              aria-hidden
+              className="mx-[3px] h-2 w-px shrink-0 bg-white/15"
+            />
+            <span className="truncate">{summary.lastActivity.label}</span>
+          </>
+        ) : (
+          "—"
+        )}
       </span>
     </CommandItem>
   );

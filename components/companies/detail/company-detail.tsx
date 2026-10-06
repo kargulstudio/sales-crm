@@ -17,6 +17,7 @@ import {
 } from "@/components/_ui/sheet";
 import FilterMenu from "@/components/_common/filter-menu";
 import DetailSection from "./detail-section";
+import CompanyPeople from "./company-people";
 import PipelineHealth from "./pipeline-health";
 import ActivityTrend from "./activity-trend";
 import ScoreCard from "./score-card";
@@ -26,7 +27,12 @@ import {
   TREND_WINDOWS,
   ownerByName,
 } from "@/data/companies";
+import { REGIONS } from "@/data/deals";
+import { summaryFor } from "@/lib/companies";
+import { useHandoff } from "@/lib/use-handoff";
 import { useCompaniesStore } from "@/stores/companies-store";
+import { useContactsStore } from "@/stores/contacts-store";
+import { useCompanySummaries, useDealsStore } from "@/stores/deals-store";
 import BuildingIcon from "@/public/assets/images/companies/detail/building.svg";
 import XIcon from "@/public/assets/images/companies/detail/x.svg";
 import MailIcon from "@/public/assets/images/companies/detail/mail-04.svg";
@@ -38,20 +44,34 @@ export default function CompanyDetail() {
   const detailId = useCompaniesStore((state) => state.detailId);
   const detailOpen = useCompaniesStore((state) => state.detailOpen);
   const companies = useCompaniesStore((state) => state.companies);
+  const summaries = useCompanySummaries();
+  const deals = useDealsStore((state) => state.deals);
   const closeDetail = useCompaniesStore((state) => state.closeDetail);
   const openProfile = useCompaniesStore((state) => state.openProfile);
+  const setAppDialog = useCompaniesStore((state) => state.setAppDialog);
+  const openContact = useContactsStore((state) => state.openDetail);
+  const handoff = useHandoff();
   const [trendWindow, setTrendWindow] = useState(TREND_WINDOWS[1]);
   const [scoreWindow, setScoreWindow] = useState(TREND_WINDOWS[1]);
 
+  const scoreDays = Number(scoreWindow.match(/\d+/)?.[0] ?? 30);
+  const scoreCards = SCORE_CARDS.filter((card) => card.ageDays <= scoreDays);
   const company = companies.find((item) => item.id === detailId);
   const owner = company ? ownerByName(company.owner) : null;
+  const regions = REGIONS.filter((region) =>
+    deals.some((deal) => deal.companyId === detailId && deal.region === region),
+  );
 
   return (
     <Sheet
       open={detailOpen && company !== undefined}
       onOpenChange={(open) => !open && closeDetail()}
     >
-      <SheetContent side="right" className="sm:w-[560px] sm:max-w-[560px]">
+      <SheetContent
+        side="right"
+        className="sm:w-[560px] sm:max-w-[560px]"
+        onCloseAutoFocus={handoff.onCloseAutoFocus}
+      >
         <SheetHeader>
           <div className="flex items-center gap-2">
             <BuildingIcon aria-hidden className="text-icon size-3.5" />
@@ -100,6 +120,11 @@ export default function CompanyDetail() {
                       {tag}
                     </Tag>
                   ))}
+                  {regions.map((region) => (
+                    <Tag key={region} tone="neutral" size="sm">
+                      {region}
+                    </Tag>
+                  ))}
                 </div>
               </div>
             </div>
@@ -109,7 +134,9 @@ export default function CompanyDetail() {
                 <Button
                   variant="ghost"
                   size="none"
-                  onClick={() => openProfile(owner.name)}
+                  onClick={() =>
+                    handoff.run(closeDetail, () => openProfile(owner.name))
+                  }
                   aria-label={`Open ${owner.name} profile`}
                   className="lead-style text-foreground -mx-1.5 gap-1.5 px-1.5 py-1 font-medium"
                 >
@@ -127,8 +154,17 @@ export default function CompanyDetail() {
               </div>
             </DetailSection>
 
+            <DetailSection title="People">
+              <CompanyPeople
+                companyId={company.id}
+                onOpenContact={(contactId) =>
+                  handoff.run(closeDetail, () => openContact(contactId))
+                }
+              />
+            </DetailSection>
+
             <DetailSection title="Pipeline health">
-              <PipelineHealth company={company} />
+              <PipelineHealth summary={summaryFor(summaries, company.id)} />
             </DetailSection>
 
             <DetailSection
@@ -142,7 +178,10 @@ export default function CompanyDetail() {
                 />
               }
             >
-              <ActivityTrend company={company} />
+              <ActivityTrend
+                summary={summaryFor(summaries, company.id)}
+                range={trendWindow}
+              />
             </DetailSection>
 
             <DetailSection
@@ -158,17 +197,28 @@ export default function CompanyDetail() {
                 />
               }
             >
-              <div className="flex flex-col gap-2">
-                {SCORE_CARDS.map((card, index) => (
-                  <ScoreCard key={`${card.title}-${index}`} card={card} />
-                ))}
-              </div>
+              {scoreCards.length > 0 ? (
+                <div className="flex flex-col gap-2">
+                  {scoreCards.map((card, index) => (
+                    <ScoreCard key={`${card.title}-${index}`} card={card} />
+                  ))}
+                </div>
+              ) : (
+                <span className="caption-style text-subtle block">
+                  No score cards updated in this period.
+                </span>
+              )}
             </DetailSection>
           </ScrollArea>
         )}
 
         <SheetFooter>
-          <Button variant="link" size="none" href="#" className="lead-style">
+          <Button
+            variant="link"
+            size="none"
+            className="lead-style"
+            onClick={() => setAppDialog("help")}
+          >
             Need help? Ask us.
           </Button>
           <div className="flex items-center gap-2">

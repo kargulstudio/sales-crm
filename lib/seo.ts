@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ROUTES } from "@/lib/routes";
 
 export const SITE_NAME = "Sales CRM";
 export const SITE_URL =
@@ -25,15 +26,11 @@ export type SiteRoute = {
   priority?: number;
 };
 
-export const SITE_ROUTES: SiteRoute[] = [
-  {
-    path: "/",
-    title: "Companies",
-    description: SITE_DESCRIPTION,
-    changeFrequency: "weekly",
-    priority: 1,
-  },
-];
+export const SITE_ROUTES: SiteRoute[] = Object.values(ROUTES).map((route) => ({
+  ...route,
+  changeFrequency: "weekly",
+  priority: route.path === "/" ? 1 : 0.8,
+}));
 
 type PageMetadataOptions = {
   title: string;

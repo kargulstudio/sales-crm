@@ -1,10 +1,13 @@
 "use client";
 
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { Tabs as TabsPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
 
-function Tabs({ className, ...props }: ComponentProps<typeof TabsPrimitive.Root>) {
+function Tabs({
+  className,
+  ...props
+}: ComponentProps<typeof TabsPrimitive.Root>) {
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
@@ -27,20 +30,12 @@ function TabsList({
   );
 }
 
-function TabsTrigger({
-  className,
-  children,
-  ...props
-}: ComponentProps<typeof TabsPrimitive.Trigger>) {
+export const tabsTriggerClass =
+  "group caption-style -mb-px grid cursor-pointer text-center border-b border-transparent py-4 text-subtle outline-none select-none transition-[color,border-color] duration-150 ease-power3-out hover:text-soft focus-visible:text-foreground data-[state=active]:border-foreground data-[state=active]:text-foreground";
+
+export function TabLabel({ children }: { children: ReactNode }) {
   return (
-    <TabsPrimitive.Trigger
-      data-slot="tabs-trigger"
-      className={cn(
-        "group caption-style -mb-px grid cursor-pointer text-center border-b border-transparent py-4 text-subtle outline-none select-none transition-[color,border-color] duration-150 ease-power3-out hover:text-soft focus-visible:text-foreground data-[state=active]:border-foreground data-[state=active]:text-foreground",
-        className,
-      )}
-      {...props}
-    >
+    <>
       <span
         aria-hidden
         className="invisible col-start-1 row-start-1 font-medium"
@@ -50,6 +45,22 @@ function TabsTrigger({
       <span className="col-start-1 row-start-1 group-data-[state=active]:font-medium">
         {children}
       </span>
+    </>
+  );
+}
+
+function TabsTrigger({
+  className,
+  children,
+  ...props
+}: ComponentProps<typeof TabsPrimitive.Trigger>) {
+  return (
+    <TabsPrimitive.Trigger
+      data-slot="tabs-trigger"
+      className={cn(tabsTriggerClass, className)}
+      {...props}
+    >
+      <TabLabel>{children}</TabLabel>
     </TabsPrimitive.Trigger>
   );
 }

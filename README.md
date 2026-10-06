@@ -35,3 +35,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `CONVENTIONS.md`   | The build rules. Read first.                                        |
 | `AGENTS.md`        | Next.js version notes for agents                                    |
 | `OPTIMIZATION.md`  | Why `Asset`'s Rive loading is gated behind LCP, with the measurements |
+
+## Credits
+
+The contact icons in `public/assets/images/contacts/` (mail, phone, copy) are from [Solar Icons](https://www.figma.com/community/file/1166831539721848736) by 480 Design, licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

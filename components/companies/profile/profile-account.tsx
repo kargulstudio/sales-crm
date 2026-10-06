@@ -2,14 +2,19 @@ import Asset from "@/components/_ui/asset";
 import Button from "@/components/_ui/button";
 import SegmentBar from "@/components/_common/segment-bar";
 import type { Company } from "@/data/companies";
-import { formatMoney } from "@/lib/companies";
+import { formatMoney, type CompanySummary } from "@/lib/companies";
 
 type ProfileAccountProps = {
   company: Company;
+  summary: CompanySummary;
   onOpen: () => void;
 };
 
-export default function ProfileAccount({ company, onOpen }: ProfileAccountProps) {
+export default function ProfileAccount({
+  company,
+  summary,
+  onOpen,
+}: ProfileAccountProps) {
   return (
     <li>
       <Button
@@ -39,15 +44,17 @@ export default function ProfileAccount({ company, onOpen }: ProfileAccountProps)
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           <span className="truncate">{company.name}</span>
           <span className="caption-style text-subtle truncate">
-            {company.openDeals} open deals · {company.tags.join(", ")}
+            {summary.openDeals} open{" "}
+            {summary.openDeals === 1 ? "deal" : "deals"} ·{" "}
+            {company.tags.join(", ")}
           </span>
         </span>
         <span className="flex shrink-0 flex-col items-end gap-1.5 tabular-nums">
           <span className="flex items-center gap-1">
             <span className="text-muted-foreground">$</span>
-            {formatMoney(company.pipelineValue)}
+            {formatMoney(summary.pipelineValue)}
           </span>
-          <SegmentBar percent={company.winProbability} className="w-[60px]" />
+          <SegmentBar percent={summary.win ?? 0} className="w-[60px]" />
         </span>
       </Button>
     </li>

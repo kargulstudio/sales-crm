@@ -18,12 +18,14 @@ import {
   TABLE_GRID_CLASS,
   TABLE_ROW_CLASS,
 } from "./table-columns";
-import { filterCompanies } from "@/lib/companies";
+import { filterCompanies, summaryFor } from "@/lib/companies";
 import { cn } from "@/lib/utils";
 import { useCompaniesStore } from "@/stores/companies-store";
+import { useCompanySummaries } from "@/stores/deals-store";
 
 export default function CompaniesTable() {
   const companies = useCompaniesStore((state) => state.companies);
+  const summaries = useCompanySummaries();
   const sortBy = useCompaniesStore((state) => state.sortBy);
   const owner = useCompaniesStore((state) => state.owner);
   const stage = useCompaniesStore((state) => state.stage);
@@ -37,8 +39,13 @@ export default function CompaniesTable() {
   const openProfile = useCompaniesStore((state) => state.openProfile);
 
   const visible = useMemo(
-    () => filterCompanies(companies, { sortBy, owner, stage, activityWindow }),
-    [companies, sortBy, owner, stage, activityWindow],
+    () =>
+      filterCompanies(
+        companies,
+        { sortBy, owner, stage, activityWindow },
+        summaries,
+      ),
+    [companies, sortBy, owner, stage, activityWindow, summaries],
   );
 
   const selectedVisible = visible.filter((company) =>
@@ -57,7 +64,10 @@ export default function CompaniesTable() {
       <ScrollArea orientation="both" className="min-h-0 flex-1">
         <Table role="table" className={cn(TABLE_GRID_CLASS, "w-full")}>
           <TableHeader role="rowgroup" className="contents">
-            <TableRow role="row" className={TABLE_ROW_CLASS}>
+            <TableRow
+              role="row"
+              className={cn(TABLE_ROW_CLASS, "bg-background sticky top-0 z-10")}
+            >
               {TABLE_COLUMNS.map((column) => (
                 <TableHead
                   key={column.key}
@@ -91,6 +101,7 @@ export default function CompaniesTable() {
               <CompanyRow
                 key={company.id}
                 company={company}
+                summary={summaryFor(summaries, company.id)}
                 selected={selectedIds.includes(company.id)}
                 active={detailOpen && detailId === company.id}
                 onToggle={() => toggleSelected(company.id)}
@@ -111,7 +122,7 @@ export default function CompaniesTable() {
           </TableBody>
         </Table>
       </ScrollArea>
-      <TableFooter count={visible.length} />
+      <TableFooter companies={visible} summaries={summaries} />
     </div>
   );
 }

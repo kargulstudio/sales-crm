@@ -1,13 +1,19 @@
+"use client";
+
 import type { ComponentType, SVGProps } from "react";
+import { usePathname } from "next/navigation";
 import Button from "@/components/_ui/button";
 import CountBadge from "@/components/_ui/count-badge";
+import { isActivePath } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+import { useCompaniesStore } from "@/stores/companies-store";
 
 type SidebarNavItemProps = {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   label: string;
+  href?: string;
+  onClick?: () => void;
   count?: number;
-  active?: boolean;
   tone?: "default" | "quiet";
   iconClassName?: string;
 };
@@ -15,16 +21,28 @@ type SidebarNavItemProps = {
 export default function SidebarNavItem({
   icon: Icon,
   label,
+  href,
+  onClick,
   count,
-  active = false,
   tone = "default",
   iconClassName,
 }: SidebarNavItemProps) {
+  const pathname = usePathname();
+  const setSidebarOpen = useCompaniesStore((state) => state.setSidebarOpen);
+  const active = href !== undefined && isActivePath(pathname, href);
+
+  function handleClick() {
+    setSidebarOpen(false);
+    onClick?.();
+  }
+
   return (
     <li className={cn(active && "mb-0.75")}>
       <Button
         variant="nav"
         size="md"
+        href={href}
+        onClick={handleClick}
         data-active={active}
         aria-current={active ? "page" : undefined}
         className={cn(
