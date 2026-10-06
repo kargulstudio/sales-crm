@@ -21,6 +21,10 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run extract:avif` | Pull the first frame of every `.webm` under `public/` as a poster  |
 | `npm run frame:rive`   | Render a still from a `.riv` file for use as its poster            |
 
+## Access
+
+Every route sits behind HTTP basic auth (`proxy.ts`), except `_next/static` and `robots.txt`. Set `BASIC_AUTH_USER` and `BASIC_AUTH_PASSWORD` in the deploy environment (Vercel → Settings → Environment Variables). Without them `npm run dev` stays open, and a production server answers 503 so a deploy can't go out unprotected. The app is also `noindex` and `robots.txt` disallows everything.
+
 ## First things to set on a new project
 
 1. **`lib/seo.ts`** — `SITE_NAME`, `SITE_URL`, `SITE_DESCRIPTION`, `SITE_ROUTES`. Everything in `app/robots.ts`, `app/sitemap.ts`, `app/llms.txt/route.ts` and every page's metadata derives from these (rule 18). Set `NEXT_PUBLIC_SITE_URL` in the environment to override the URL per deploy.
