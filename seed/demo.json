@@ -1,0 +1,754 @@
+{
+  "companies": [
+    {
+      "id": "lvmh",
+      "name": "LVMH",
+      "tags": [
+        "Enterprise",
+        "Upsell",
+        "Expansion",
+        "Renewal"
+      ],
+      "owner": "Sarah Nguyen",
+      "openDeals": 7,
+      "pipelineValue": 420000,
+      "winProbability": 70,
+      "trend": [
+        4,
+        4,
+        10,
+        3,
+        2,
+        4,
+        7,
+        4,
+        11,
+        4,
+        11,
+        7,
+        4,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-02-21",
+        "label": "QBR Call"
+      },
+      "activityDays": 88,
+      "logo": "/assets/images/companies/logos/lvmh.svg"
+    },
+    {
+      "id": "disney",
+      "name": "Disney",
+      "tags": [
+        "Enterprise",
+        "New Logo"
+      ],
+      "owner": "James Taylor",
+      "openDeals": 4,
+      "pipelineValue": 311242,
+      "winProbability": 51,
+      "trend": [
+        4,
+        4,
+        5,
+        5,
+        2,
+        7,
+        11,
+        7,
+        5,
+        7,
+        5,
+        3,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-02-22",
+        "label": "Demo"
+      },
+      "activityDays": 87,
+      "logo": "/assets/images/companies/logos/disney.svg"
+    },
+    {
+      "id": "paypal",
+      "name": "Paypal",
+      "tags": [
+        "Enterprise"
+      ],
+      "owner": "Maria Keller",
+      "openDeals": 5,
+      "pipelineValue": 124232,
+      "winProbability": 22,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-03-12",
+        "label": "Security"
+      },
+      "activityDays": 84,
+      "logo": "/assets/images/companies/logos/paypal.svg"
+    },
+    {
+      "id": "united-airlines",
+      "name": "United Airlines",
+      "tags": [
+        "Renewal"
+      ],
+      "owner": "Nia Jameson",
+      "openDeals": 2,
+      "pipelineValue": 221231,
+      "winProbability": 77,
+      "trend": [
+        4,
+        4,
+        5,
+        12,
+        5,
+        7,
+        11,
+        3,
+        11,
+        3,
+        11,
+        3,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-03-17",
+        "label": "Legal"
+      },
+      "activityDays": 81,
+      "logo": "/assets/images/companies/logos/united-airlines.svg"
+    },
+    {
+      "id": "apple",
+      "name": "Apple",
+      "tags": [
+        "Pilot"
+      ],
+      "owner": "Alex Santos",
+      "openDeals": 6,
+      "pipelineValue": 530111,
+      "winProbability": 82,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-03-12",
+        "label": "Exec"
+      },
+      "activityDays": 83,
+      "logo": "/assets/images/companies/logos/apple.svg"
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "tags": [
+        "Strategic",
+        "Expansion"
+      ],
+      "owner": "Mark Darnalds",
+      "openDeals": 8,
+      "pipelineValue": 320222,
+      "winProbability": 86,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-03-15",
+        "label": "Pilot"
+      },
+      "activityDays": 79,
+      "logo": "/assets/images/companies/logos/microsoft.svg"
+    },
+    {
+      "id": "airbnb",
+      "name": "Airbnb",
+      "tags": [
+        "Upsell",
+        "Expansion",
+        "SMB",
+        "Pilot"
+      ],
+      "owner": "Drew Nash",
+      "openDeals": 3,
+      "pipelineValue": 122230,
+      "winProbability": 51,
+      "trend": [
+        4,
+        4,
+        5,
+        5,
+        2,
+        7,
+        11,
+        7,
+        5,
+        7,
+        5,
+        3,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-03-18",
+        "label": "Pricing"
+      },
+      "activityDays": 78,
+      "logo": "/assets/images/companies/logos/airbnb.svg"
+    },
+    {
+      "id": "intercom",
+      "name": "Intercom",
+      "tags": [
+        "Enterprise",
+        "Mid-Market"
+      ],
+      "owner": "Lina Wong",
+      "openDeals": 5,
+      "pipelineValue": 230112,
+      "winProbability": 61,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-03-28",
+        "label": "Product"
+      },
+      "activityDays": 74,
+      "logo": "/assets/images/companies/logos/intercom.svg"
+    },
+    {
+      "id": "attio",
+      "name": "Attio",
+      "tags": [
+        "Mid-Market",
+        "Upsell",
+        "Renewal",
+        "Co-Sell"
+      ],
+      "owner": "Jamie Fox",
+      "openDeals": 2,
+      "pipelineValue": 420222,
+      "winProbability": 38,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-06-14",
+        "label": "Pricing"
+      },
+      "activityDays": 58,
+      "logo": "/assets/images/companies/logos/attio.svg"
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "tags": [
+        "SMB",
+        "Enterprise",
+        "Expansion",
+        "Pilot"
+      ],
+      "owner": "Kate Chen",
+      "openDeals": 8,
+      "pipelineValue": 112277,
+      "winProbability": 24,
+      "trend": [
+        4,
+        4,
+        5,
+        5,
+        2,
+        7,
+        11,
+        7,
+        5,
+        7,
+        5,
+        3,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-06-07",
+        "label": "Renewal"
+      },
+      "activityDays": 62,
+      "logo": "/assets/images/companies/logos/google.svg"
+    },
+    {
+      "id": "netflix",
+      "name": "Netflix",
+      "tags": [
+        "Mid-Market"
+      ],
+      "owner": "Ricky Brown",
+      "openDeals": 3,
+      "pipelineValue": 221221,
+      "winProbability": 72,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-06-18",
+        "label": "Pilot"
+      },
+      "activityDays": 55,
+      "logo": "/assets/images/companies/logos/netflix.svg"
+    },
+    {
+      "id": "spotify",
+      "name": "Spotify",
+      "tags": [
+        "Land & Expand",
+        "Expansion",
+        "Strategic"
+      ],
+      "owner": "Hannah Mills",
+      "openDeals": 5,
+      "pipelineValue": 170991,
+      "winProbability": 55,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-07-01",
+        "label": "Expansion"
+      },
+      "activityDays": 48,
+      "logo": "/assets/images/companies/logos/spotify.svg"
+    },
+    {
+      "id": "shopify",
+      "name": "Shopify",
+      "tags": [
+        "Co-Sell",
+        "Expansion"
+      ],
+      "owner": "Emma Green",
+      "openDeals": 9,
+      "pipelineValue": 139007,
+      "winProbability": 45,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-07-18",
+        "label": "Renewal"
+      },
+      "activityDays": 40,
+      "logo": "/assets/images/companies/logos/shopify.svg"
+    },
+    {
+      "id": "zoom",
+      "name": "Zoom",
+      "tags": [
+        "Expansion",
+        "Land & Expand",
+        "Renewal"
+      ],
+      "owner": "Oliver Chan",
+      "openDeals": 8,
+      "pipelineValue": 289921,
+      "winProbability": 38,
+      "trend": [
+        4,
+        4,
+        5,
+        12,
+        5,
+        7,
+        11,
+        3,
+        11,
+        3,
+        11,
+        3,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-08-08",
+        "label": "Partner"
+      },
+      "activityDays": 27,
+      "logo": "/assets/images/companies/logos/zoom.svg"
+    },
+    {
+      "id": "slack",
+      "name": "Slack",
+      "tags": [
+        "Mid-Market",
+        "Co-Sell"
+      ],
+      "owner": "Ava Brooks",
+      "openDeals": 4,
+      "pipelineValue": 333221,
+      "winProbability": 23,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-08-12",
+        "label": "Discovery"
+      },
+      "activityDays": 24,
+      "logo": "/assets/images/companies/logos/slack.svg"
+    },
+    {
+      "id": "stripe",
+      "name": "Stripe",
+      "tags": [
+        "Expansion",
+        "SMB",
+        "Upsell",
+        "Pilot"
+      ],
+      "owner": "Noah Lee",
+      "openDeals": 3,
+      "pipelineValue": 442231,
+      "winProbability": 44,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-09-09",
+        "label": "Demo"
+      },
+      "activityDays": 8,
+      "logo": "/assets/images/companies/logos/stripe.svg"
+    },
+    {
+      "id": "snowflake",
+      "name": "Snowflake",
+      "tags": [
+        "Enterprise",
+        "Mid-Market"
+      ],
+      "owner": "Grace Miller",
+      "openDeals": 6,
+      "pipelineValue": 520000,
+      "winProbability": 24,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-09-11",
+        "label": "Pricing"
+      },
+      "activityDays": 6,
+      "logo": "/assets/images/companies/logos/snowflake.svg"
+    },
+    {
+      "id": "hubspot",
+      "name": "Hubspot",
+      "tags": [
+        "Expansion",
+        "Co-Sell",
+        "Renewal",
+        "Pilot"
+      ],
+      "owner": "Chloe Park",
+      "openDeals": 2,
+      "pipelineValue": 210123,
+      "winProbability": 52,
+      "trend": [
+        4,
+        4,
+        10,
+        5,
+        2,
+        7,
+        11,
+        7,
+        11,
+        7,
+        11,
+        7,
+        7,
+        14
+      ],
+      "lastInteraction": {
+        "date": "2026-09-18",
+        "label": "QBR Call"
+      },
+      "activityDays": 2,
+      "logo": "/assets/images/companies/logos/hubspot.svg"
+    }
+  ],
+  "owners": [
+    {
+      "name": "Sarah Nguyen",
+      "avatar": "/assets/images/_common/avatars/avatar-1.png",
+      "email": "sarah.nguyen@crm.com",
+      "phone": "+1 (202) 199-5520",
+      "role": "Senior Account Executive"
+    },
+    {
+      "name": "James Taylor",
+      "avatar": "/assets/images/_common/avatars/avatar-2.png",
+      "email": "james.taylor@crm.com",
+      "phone": "+1 (202) 200-5557",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Maria Keller",
+      "avatar": "/assets/images/_common/avatars/avatar-3.png",
+      "email": "maria.keller@crm.com",
+      "phone": "+1 (202) 201-5594",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Nia Jameson",
+      "avatar": "/assets/images/_common/avatars/avatar-4.png",
+      "email": "nia.jameson@crm.com",
+      "phone": "+1 (202) 202-5631",
+      "role": "Senior Account Executive"
+    },
+    {
+      "name": "Alex Santos",
+      "avatar": "/assets/images/_common/avatars/avatar-5.png",
+      "email": "alex.santos@crm.com",
+      "phone": "+1 (202) 203-5668",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Mark Darnalds",
+      "avatar": "/assets/images/_common/avatars/avatar-6.png",
+      "email": "mark.darnalds@crm.com",
+      "phone": "+1 (202) 204-5705",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Drew Nash",
+      "avatar": "/assets/images/_common/avatars/avatar-7.png",
+      "email": "drew.nash@crm.com",
+      "phone": "+1 (202) 205-5742",
+      "role": "Senior Account Executive"
+    },
+    {
+      "name": "Lina Wong",
+      "avatar": "/assets/images/_common/avatars/avatar-8.png",
+      "email": "lina.wong@crm.com",
+      "phone": "+1 (202) 206-5779",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Jamie Fox",
+      "avatar": "/assets/images/_common/avatars/avatar-9.png",
+      "email": "jamie.fox@crm.com",
+      "phone": "+1 (202) 207-5816",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Kate Chen",
+      "avatar": "/assets/images/_common/avatars/avatar-10.png",
+      "email": "kate.chen@crm.com",
+      "phone": "+1 (202) 208-5853",
+      "role": "Senior Account Executive"
+    },
+    {
+      "name": "Ricky Brown",
+      "avatar": "/assets/images/_common/avatars/avatar-1.png",
+      "email": "ricky.brown@crm.com",
+      "phone": "+1 (202) 209-5890",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Hannah Mills",
+      "avatar": "/assets/images/_common/avatars/avatar-2.png",
+      "email": "hannah.mills@crm.com",
+      "phone": "+1 (202) 210-5927",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Emma Green",
+      "avatar": "/assets/images/_common/avatars/avatar-3.png",
+      "email": "emma.green@crm.com",
+      "phone": "+1 (202) 211-5964",
+      "role": "Senior Account Executive"
+    },
+    {
+      "name": "Oliver Chan",
+      "avatar": "/assets/images/_common/avatars/avatar-4.png",
+      "email": "oliver.chan@crm.com",
+      "phone": "+1 (202) 212-6001",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Ava Brooks",
+      "avatar": "/assets/images/_common/avatars/avatar-5.png",
+      "email": "ava.brooks@crm.com",
+      "phone": "+1 (202) 213-6038",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Noah Lee",
+      "avatar": "/assets/images/_common/avatars/avatar-6.png",
+      "email": "noah.lee@crm.com",
+      "phone": "+1 (202) 214-6075",
+      "role": "Senior Account Executive"
+    },
+    {
+      "name": "Grace Miller",
+      "avatar": "/assets/images/_common/avatars/avatar-7.png",
+      "email": "grace.miller@crm.com",
+      "phone": "+1 (202) 215-6112",
+      "role": "Account Executive"
+    },
+    {
+      "name": "Chloe Park",
+      "avatar": "/assets/images/_common/avatars/avatar-8.png",
+      "email": "chloe.park@crm.com",
+      "phone": "+1 (202) 216-6149",
+      "role": "Account Executive"
+    }
+  ]
+}

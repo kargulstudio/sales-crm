@@ -1,4 +1,5 @@
 "use client";
+import { useOwner } from "@/stores/companies-store";
 
 import { useCommandState } from "cmdk";
 import Asset from "@/components/_ui/asset";
@@ -6,10 +7,10 @@ import Avatar from "@/components/_ui/avatar";
 import { CommandItem } from "@/components/_ui/command";
 import Tag from "@/components/_ui/tag";
 import SegmentBar from "@/components/_common/segment-bar";
-import { TAG_TONES, ownerByName, type Company } from "@/data/companies";
+import { TAG_TONES, type Company } from "@/data/companies";
 import { formatDate, formatMoney, splitTags } from "@/lib/companies";
 import { cn } from "@/lib/utils";
-import CalendarIcon from "@/public/assets/images/_common/calendar.svg";
+import CalendarIcon from "@/assets/icons/_common/calendar.svg?react";
 
 export const COMMAND_TABLE_GRID =
   "grid grid-cols-[minmax(0,1fr)_96px] gap-x-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_minmax(0,1fr)_96px] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.5fr)_minmax(0,1.1fr)_96px_120px_minmax(0,1fr)]";
@@ -54,7 +55,7 @@ export function CommandCompanyRow({
   company,
   onSelect,
 }: CommandCompanyRowProps) {
-  const owner = ownerByName(company.owner);
+  const owner = useOwner(company.owner);
   const { visible, hidden } = splitTags(company.tags);
 
   return (

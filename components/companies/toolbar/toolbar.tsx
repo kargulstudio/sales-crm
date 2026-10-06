@@ -5,7 +5,6 @@ import FilterMenu from "@/components/_common/filter-menu";
 import MobileFilters from "./mobile-filters";
 import {
   ACTIVITY_OPTIONS,
-  OWNER_OPTIONS,
   SORT_MENU_OPTIONS,
   STAGE_OPTIONS,
 } from "./filter-options";
@@ -13,10 +12,15 @@ import type { SortKey } from "@/data/companies";
 import { TODAY, companiesCsvRows, filterCompanies } from "@/lib/companies";
 import { downloadCsv } from "@/lib/csv";
 import { useCompaniesStore } from "@/stores/companies-store";
-import ShareIcon from "@/public/assets/images/companies/toolbar/share.svg";
-import PlusIcon from "@/public/assets/images/_common/plus.svg";
+import ShareIcon from "@/assets/icons/companies/toolbar/share.svg?react";
+import PlusIcon from "@/assets/icons/_common/plus.svg?react";
 
 export default function CompaniesToolbar() {
+  const owners = useCompaniesStore((s) => s.owners);
+  const OWNER_OPTIONS = [
+    { value: "all", label: "All Owners" },
+    ...owners.map((o) => ({ value: o.name, label: o.name })),
+  ];
   const sortBy = useCompaniesStore((state) => state.sortBy);
   const owner = useCompaniesStore((state) => state.owner);
   const stage = useCompaniesStore((state) => state.stage);

@@ -1,4 +1,5 @@
 "use client";
+import { useOwner } from "@/stores/companies-store";
 
 import type { MouseEvent } from "react";
 import Avatar from "@/components/_ui/avatar";
@@ -8,7 +9,7 @@ import Tag from "@/components/_ui/tag";
 import { TableCell, TableRow } from "@/components/_ui/table";
 import SegmentBar from "@/components/_common/segment-bar";
 import Sparkline from "@/components/_common/sparkline";
-import { TAG_TONES, ownerByName, type Company } from "@/data/companies";
+import { TAG_TONES, type Company } from "@/data/companies";
 import { formatDate, formatMoney, splitTags } from "@/lib/companies";
 import { cn } from "@/lib/utils";
 import {
@@ -17,8 +18,8 @@ import {
   columnClass,
   type TableColumnKey,
 } from "./table-columns";
-import CalendarIcon from "@/public/assets/images/_common/calendar.svg";
-import DotsIcon from "@/public/assets/images/companies/table/dots-horizontal.svg";
+import CalendarIcon from "@/assets/icons/_common/calendar.svg?react";
+import DotsIcon from "@/assets/icons/companies/table/dots-horizontal.svg?react";
 
 type CompanyRowProps = {
   company: Company;
@@ -45,7 +46,7 @@ export default function CompanyRow({
   onOpen,
   onOpenOwner,
 }: CompanyRowProps) {
-  const owner = ownerByName(company.owner);
+  const owner = useOwner(company.owner);
   const { visible, hidden } = splitTags(company.tags);
 
   return (

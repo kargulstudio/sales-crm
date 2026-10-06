@@ -4,11 +4,11 @@ import Avatar from "@/components/_ui/avatar";
 import Button from "@/components/_ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/_ui/tabs";
 import Notifications from "./notifications/notifications";
-import { CURRENT_USER } from "@/data/companies";
+
 import { useCompaniesStore } from "@/stores/companies-store";
-import MenuIcon from "@/public/assets/images/_common/menu.svg";
-import ActiveDot from "@/public/assets/images/companies/header/active-dot.svg";
-import SearchIcon from "@/public/assets/images/_common/search.svg";
+import MenuIcon from "@/assets/icons/_common/menu.svg?react";
+import ActiveDot from "@/assets/icons/companies/header/active-dot.svg?react";
+import SearchIcon from "@/assets/icons/_common/search.svg?react";
 
 const TABS = [
   { value: "companies", label: "Companies" },
@@ -17,6 +17,11 @@ const TABS = [
 ];
 
 export default function CompaniesHeader() {
+  const user = useCompaniesStore((s) => s.user);
+  const CURRENT_USER = {
+    name: user?.display_name || "Account",
+    avatar: user?.avatar_url || "/assets/images/_common/avatar-placeholder.svg",
+  };
   const activeTab = useCompaniesStore((state) => state.activeTab);
   const setActiveTab = useCompaniesStore((state) => state.setActiveTab);
   const setSidebarOpen = useCompaniesStore((state) => state.setSidebarOpen);
@@ -36,7 +41,7 @@ export default function CompaniesHeader() {
           >
             <MenuIcon aria-hidden className="size-3.5" />
           </Button>
-          <h1 className="truncate">Companies</h1>
+          <h1 className="truncate capitalize">{activeTab}</h1>
           <span className="caption-style bg-muted inline-flex shrink-0 items-center gap-0.5 rounded-full border border-[#363636] py-[3px] pr-[5px] pl-[3px]">
             <ActiveDot aria-hidden className="size-3" />
             Active
@@ -70,7 +75,12 @@ export default function CompaniesHeader() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="border-border border-b px-4">
           {TABS.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value}>
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              id={`crm-tab-${tab.value}`}
+              aria-controls={`crm-panel-${tab.value}`}
+            >
               {tab.label}
             </TabsTrigger>
           ))}

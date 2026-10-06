@@ -10,6 +10,7 @@ type SidebarNavItemProps = {
   active?: boolean;
   tone?: "default" | "quiet";
   iconClassName?: string;
+  onClick?: () => void;
 };
 
 export default function SidebarNavItem({
@@ -19,10 +20,12 @@ export default function SidebarNavItem({
   active = false,
   tone = "default",
   iconClassName,
+  onClick,
 }: SidebarNavItemProps) {
   return (
     <li className={cn(active && "mb-0.75")}>
       <Button
+        onClick={onClick}
         variant="nav"
         size="md"
         data-active={active}
@@ -37,6 +40,7 @@ export default function SidebarNavItem({
           className={cn(
             "text-subtle ease-power3-out group-hover:text-icon group-data-[active=true]:text-icon size-3.5 shrink-0 transition-colors duration-150",
             iconClassName,
+            onClick,
           )}
         />
         <span className="min-w-0 flex-1 truncate text-left">{label}</span>

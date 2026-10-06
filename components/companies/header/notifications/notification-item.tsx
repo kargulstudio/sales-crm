@@ -1,7 +1,8 @@
+import { useOwner } from "@/stores/companies-store";
 import Asset from "@/components/_ui/asset";
 import Avatar from "@/components/_ui/avatar";
 import Button from "@/components/_ui/button";
-import { ownerByName, type Company } from "@/data/companies";
+import { type Company } from "@/data/companies";
 import type { Notification } from "@/data/notifications";
 import { cn } from "@/lib/utils";
 
@@ -51,7 +52,7 @@ export default function NotificationItem({
   unread,
   onSelect,
 }: NotificationItemProps) {
-  const actor = notification.actor ? ownerByName(notification.actor) : null;
+  const actor = useOwner(notification.actor ?? null);
 
   return (
     <li className="relative">

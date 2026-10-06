@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sales-crm",
+  "main": "vinext/server/app-router-entry",
+  "compatibility_date": "2026-10-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": { "not_found_handling": "none" },
+  "observability": { "enabled": true, "redact_query_string": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sales-crm",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "https://your-team.cloudflareaccess.com",
+    "ACCESS_AUD": "replace-with-your-access-application-audience",
+  },
+}

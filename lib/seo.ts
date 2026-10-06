@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 
 export const SITE_NAME = "Sales CRM";
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
-export const SITE_DESCRIPTION = "Company pipeline for the sales team.";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+export const SITE_DESCRIPTION =
+  "Your personal company pipeline, contacts and follow-ups.";
 export const DEFAULT_OG_IMAGE = "/opengraph-image.jpg";
 
 export function absoluteUrl(path: string) {

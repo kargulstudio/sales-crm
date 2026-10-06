@@ -1,4 +1,5 @@
 "use client";
+import { useOwner } from "@/stores/companies-store";
 
 import { useState } from "react";
 import Asset from "@/components/_ui/asset";
@@ -20,17 +21,15 @@ import DetailSection from "./detail-section";
 import PipelineHealth from "./pipeline-health";
 import ActivityTrend from "./activity-trend";
 import ScoreCard from "./score-card";
-import {
-  SCORE_CARDS,
-  TAG_TONES,
-  TREND_WINDOWS,
-  ownerByName,
-} from "@/data/companies";
+import CompanyEditor from "./company-editor";
+import CrmRecords from "./crm-records";
+import { companyActivity } from "@/lib/companies";
+import { TAG_TONES, TREND_WINDOWS } from "@/data/companies";
 import { useCompaniesStore } from "@/stores/companies-store";
-import BuildingIcon from "@/public/assets/images/companies/detail/building.svg";
-import XIcon from "@/public/assets/images/companies/detail/x.svg";
-import MailIcon from "@/public/assets/images/companies/detail/mail-04.svg";
-import PhoneIcon from "@/public/assets/images/companies/detail/phone.svg";
+import BuildingIcon from "@/assets/icons/companies/detail/building.svg?react";
+import XIcon from "@/assets/icons/companies/detail/x.svg?react";
+import MailIcon from "@/assets/icons/companies/detail/mail-04.svg?react";
+import PhoneIcon from "@/assets/icons/companies/detail/phone.svg?react";
 
 const WINDOW_OPTIONS = TREND_WINDOWS.map((label) => ({ value: label, label }));
 
@@ -44,7 +43,35 @@ export default function CompanyDetail() {
   const [scoreWindow, setScoreWindow] = useState(TREND_WINDOWS[1]);
 
   const company = companies.find((item) => item.id === detailId);
-  const owner = company ? ownerByName(company.owner) : null;
+  const owner = useOwner(company?.owner ?? null);
+  const activity = company
+    ? companyActivity(company, Number(scoreWindow.match(/\d+/)?.[0] || 30))
+    : null;
+  const scoreCards = company
+    ? [
+        {
+          title: "Contact coverage",
+          description: `${company.contactCount || 0} contacts recorded for this company.`,
+          stars: Math.min(5, company.contactCount || 0),
+        },
+        {
+          title: "Follow-up coverage",
+          description: `${company.taskCount || 0} open follow-ups.`,
+          stars: company.taskCount ? 5 : 0,
+        },
+        {
+          title: "Recent engagement",
+          description: `${activity?.total || 0} interactions in this period.`,
+          stars: Math.min(5, activity?.total || 0),
+        },
+      ].map((c) => ({
+        ...c,
+        reviewer: owner.name,
+        reviewerAvatar: owner.avatar,
+        updated: "Derived from records",
+        verdict: "Completeness indicator",
+      }))
+    : [];
 
   return (
     <Sheet
@@ -127,6 +154,10 @@ export default function CompanyDetail() {
               </div>
             </DetailSection>
 
+            <DetailSection title="Edit company">
+              <CompanyEditor key={company.id} company={company} />
+            </DetailSection>
+
             <DetailSection title="Pipeline health">
               <PipelineHealth company={company} />
             </DetailSection>
@@ -142,11 +173,14 @@ export default function CompanyDetail() {
                 />
               }
             >
-              <ActivityTrend company={company} />
+              <ActivityTrend
+                company={company}
+                days={Number(trendWindow.match(/\d+/)?.[0] || 30)}
+              />
             </DetailSection>
 
             <DetailSection
-              title="Score card"
+              title="Relationship scorecards"
               className="gap-3 shadow-none"
               action={
                 <FilterMenu
@@ -159,17 +193,23 @@ export default function CompanyDetail() {
               }
             >
               <div className="flex flex-col gap-2">
-                {SCORE_CARDS.map((card, index) => (
+                {scoreCards.map((card, index) => (
                   <ScoreCard key={`${card.title}-${index}`} card={card} />
                 ))}
               </div>
             </DetailSection>
+            <CrmRecords key={company.id} companyId={company.id} />
           </ScrollArea>
         )}
 
         <SheetFooter>
-          <Button variant="link" size="none" href="#" className="lead-style">
-            Need help? Ask us.
+          <Button
+            variant="link"
+            size="none"
+            href="https://github.com/kargulstudio/sales-crm#readme"
+            className="lead-style"
+          >
+            Documentation
           </Button>
           <div className="flex items-center gap-2">
             <SheetClose asChild>
@@ -177,7 +217,12 @@ export default function CompanyDetail() {
                 Cancel
               </Button>
             </SheetClose>
-            <Button variant="primary" size="sm" onClick={closeDetail}>
+            <Button
+              variant="primary"
+              size="sm"
+              type="submit"
+              form="company-edit"
+            >
               Save Update
             </Button>
           </div>

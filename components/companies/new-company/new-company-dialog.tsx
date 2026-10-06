@@ -28,7 +28,6 @@ import LogoUpload from "./logo-upload";
 import {
   DEFAULT_TREND,
   INTERACTION_TYPES,
-  OWNERS,
   SEGMENTS,
   STAGES,
   type Company,
@@ -38,7 +37,7 @@ import {
 import { TODAY, daysSince } from "@/lib/companies";
 import { slugify } from "@/lib/utils";
 import { useCompaniesStore } from "@/stores/companies-store";
-import PlusIcon from "@/public/assets/images/_common/plus.svg";
+import PlusIcon from "@/assets/icons/_common/plus.svg?react";
 
 type FormState = {
   logo: string | null;
@@ -58,7 +57,7 @@ const EMPTY_FORM: FormState = {
   name: "",
   segment: SEGMENTS[0],
   stage: STAGES[0],
-  owner: OWNERS[0].name,
+  owner: "",
   pipelineValue: "",
   openDeals: "1",
   winProbability: 50,
@@ -67,6 +66,8 @@ const EMPTY_FORM: FormState = {
 };
 
 export default function NewCompanyDialog() {
+  const OWNERS = useCompaniesStore((s) => s.owners);
+  const [saving, setSaving] = useState(false);
   const open = useCompaniesStore((state) => state.newCompanyOpen);
   const setOpen = useCompaniesStore((state) => state.setNewCompanyOpen);
   const addCompany = useCompaniesStore((state) => state.addCompany);
@@ -78,7 +79,7 @@ export default function NewCompanyDialog() {
     setForm((current) => ({ ...current, [key]: value }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const name = form.name.trim();
     if (!name) {
@@ -92,7 +93,7 @@ export default function NewCompanyDialog() {
       name,
       logo: form.logo ?? undefined,
       tags: [form.segment, form.stage],
-      owner: form.owner,
+      owner: form.owner || OWNERS[0]?.name || "",
       openDeals: Math.max(0, Math.round(Number(form.openDeals) || 0)),
       pipelineValue: Math.max(0, Math.round(Number(form.pipelineValue) || 0)),
       winProbability: form.winProbability,
@@ -104,7 +105,16 @@ export default function NewCompanyDialog() {
       activityDays: daysSince(form.interactionDate || TODAY),
     };
 
-    addCompany(company);
+    setSaving(true);
+    try {
+      await addCompany(company);
+    } catch (error) {
+      setNameError(
+        error instanceof Error ? error.message : "Unable to create company",
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -195,7 +205,7 @@ export default function NewCompanyDialog() {
           <FormSection title="Ownership & deal">
             <Field label="Account owner" htmlFor="company-owner">
               <Select
-                value={form.owner}
+                value={form.owner || OWNERS[0]?.name || ""}
                 onValueChange={(value) => update("owner", value)}
               >
                 <SelectTrigger id="company-owner">
@@ -321,9 +331,9 @@ export default function NewCompanyDialog() {
                 Cancel
               </Button>
             </DialogClose>
-            <Button variant="primary" size="sm" type="submit">
+            <Button variant="primary" size="sm" type="submit" disabled={saving}>
               <PlusIcon aria-hidden className="size-3" />
-              Create Company
+              {saving ? "Saving…" : "Create Company"}
             </Button>
           </DialogFooter>
         </form>

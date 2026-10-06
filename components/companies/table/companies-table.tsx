@@ -111,7 +111,7 @@ export default function CompaniesTable() {
           </TableBody>
         </Table>
       </ScrollArea>
-      <TableFooter count={visible.length} />
+      <TableFooter companies={visible} />
     </div>
   );
 }

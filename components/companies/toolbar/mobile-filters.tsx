@@ -24,11 +24,10 @@ import {
 } from "@/components/_ui/sheet";
 import {
   ACTIVITY_OPTIONS,
-  OWNER_OPTIONS,
   SORT_MENU_OPTIONS,
   STAGE_OPTIONS,
 } from "./filter-options";
-import { ownerByName, type SortKey } from "@/data/companies";
+import { type SortKey } from "@/data/companies";
 import {
   ALL_OWNERS,
   activeFilterCount,
@@ -36,14 +35,19 @@ import {
 } from "@/lib/companies";
 import { cn } from "@/lib/utils";
 import { useCompaniesStore } from "@/stores/companies-store";
-import FilterIcon from "@/public/assets/images/_common/filter.svg";
-import XIcon from "@/public/assets/images/companies/detail/x.svg";
+import FilterIcon from "@/assets/icons/_common/filter.svg?react";
+import XIcon from "@/assets/icons/companies/detail/x.svg?react";
 
 type MobileFiltersProps = {
   className?: string;
 };
 
 export default function MobileFilters({ className }: MobileFiltersProps) {
+  const owners = useCompaniesStore((s) => s.owners);
+  const OWNER_OPTIONS = [
+    { value: "all", label: "All Owners" },
+    ...owners.map((o) => ({ value: o.name, label: o.name })),
+  ];
   const [open, setOpen] = useState(false);
   const companies = useCompaniesStore((state) => state.companies);
   const sortBy = useCompaniesStore((state) => state.sortBy);
@@ -135,7 +139,11 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
                       ) : (
                         <span className="flex items-center gap-2">
                           <Avatar
-                            src={ownerByName(option.value).avatar}
+                            src={
+                              owners.find((o) => o.name === option.value)
+                                ?.avatar ||
+                              "/assets/images/_common/avatar-placeholder.svg"
+                            }
                             alt=""
                           />
                           {option.label}

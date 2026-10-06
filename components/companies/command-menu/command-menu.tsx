@@ -15,7 +15,7 @@ import {
 } from "@/components/_ui/command";
 import { CommandCompanyRow, CommandTableHeader } from "./command-table";
 import { useCompaniesStore } from "@/stores/companies-store";
-import PlusIcon from "@/public/assets/images/_common/plus.svg";
+import PlusIcon from "@/assets/icons/_common/plus.svg?react";
 
 export default function CommandMenu() {
   const open = useCompaniesStore((state) => state.searchOpen);

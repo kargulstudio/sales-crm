@@ -7,7 +7,7 @@ export type CompanyFilters = {
   activityWindow: number;
 };
 
-export const TODAY = "2026-09-14";
+export const TODAY = new Date().toISOString().slice(0, 10);
 
 export const ALL_OWNERS = "all";
 export const ANY_STAGE = "any";
@@ -16,7 +16,7 @@ export const DEFAULT_FILTERS: CompanyFilters = {
   sortBy: "pipelineValue",
   owner: ALL_OWNERS,
   stage: ANY_STAGE,
-  activityWindow: 90,
+  activityWindow: 0,
 };
 
 export function activeFilterCount({
@@ -42,7 +42,7 @@ export function filterCompanies(
     if (stage !== ANY_STAGE && !company.tags.some((tag) => tag === stage)) {
       return false;
     }
-    return company.activityDays <= activityWindow;
+    return activityWindow === 0 || company.activityDays <= activityWindow;
   });
 
   return filtered.sort((a, b) => {
@@ -102,25 +102,28 @@ export function splitTags(tags: Company["tags"]) {
 }
 
 export function companyHealth(company: Company) {
-  return {
-    discovery: Math.round(company.winProbability * 0.372),
-    evaluation: Math.round(company.winProbability * 0.651),
-    procurement: Math.round(company.winProbability * 0.372),
-  };
+  return company.health ?? { discovery: 0, evaluation: 0, procurement: 0 };
 }
-
-export function companyActivity(company: Company) {
-  const deals = company.openDeals;
+export function companyActivity(company: Company, days = 30) {
+  const since = new Date(Date.now() - days * 86400000)
+    .toISOString()
+    .slice(0, 10);
+  const rows = (company.activityByDay ?? []).filter((a) => a.day >= since);
+  const count = (types?: string[]) =>
+    rows
+      .filter((a) => !types || types.includes(a.type))
+      .reduce((sum, a) => sum + a.count, 0);
   return {
-    total: deals * 15,
-    touches: deals * 4,
-    emails: deals + 4,
-    meetings: Math.ceil(deals / 2),
-    calls: deals + 1,
+    total: count(),
+    touches: count(),
+    emails: count(["email"]),
+    meetings: count(["meeting", "demo"]),
+    calls: count(["call", "note"]),
   };
 }
 
 export function formatDate(iso: string) {
+  if (!iso) return "—";
   const [, month, day] = iso.split("-").map(Number);
   const names = [
     "Jan",

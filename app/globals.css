@@ -294,3 +294,7 @@ html[data-sidebar-resizing] * {
     font-size: 12px;
   }
 }
+
+/* Native form controls use the existing CRM surface and type tokens. */
+.crm-select { width:100%; border:1px solid var(--line-strong); border-radius:6px; padding:8px 10px; background:var(--color-background, #191919); color:var(--color-foreground, #eee); font-size:13px; }
+.crm-select:focus-visible { outline:2px solid #999; outline-offset:2px; }

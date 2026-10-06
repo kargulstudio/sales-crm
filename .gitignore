@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Cloudflare / Vite / test output and local secrets
+/dist/
+.vinext/
+.wrangler/
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+playwright-report/
+test-results/
+*.tsbuildinfo

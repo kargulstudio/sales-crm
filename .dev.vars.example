@@ -1,0 +1,3 @@
+# Only honored by the Vite dev build on loopback. Never honored in production.
+LOCAL_DEV_AUTH=true
+LOCAL_DEV_EMAIL=developer@localhost.test
