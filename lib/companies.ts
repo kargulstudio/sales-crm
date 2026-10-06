@@ -131,7 +131,7 @@ export function formatDate(iso: string) {
     "Jun",
     "Jul",
     "Aug",
-    "Sept",
+    "Sep",
     "Oct",
     "Nov",
     "Dec",
