@@ -7,7 +7,7 @@ export type CompanyFilters = {
   activityWindow: number;
 };
 
-export const TODAY = "2026-09-14";
+export const TODAY = new Date().toISOString().slice(0, 10);
 
 export const ALL_OWNERS = "all";
 export const ANY_STAGE = "any";
@@ -131,7 +131,7 @@ export function formatDate(iso: string) {
     "Jun",
     "Jul",
     "Aug",
-    "Sept",
+    "Sep",
     "Oct",
     "Nov",
     "Dec",
