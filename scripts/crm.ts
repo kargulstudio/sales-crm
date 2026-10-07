@@ -1,7 +1,11 @@
 import { readFileSync } from "node:fs";
 import * as z from "zod";
 import { csvRowsToCompanies, parseCsv } from "@/lib/crm/csv-import";
-import { CRM_OPERATIONS, findOperation, runCrmOperation } from "@/lib/crm/operations";
+import {
+  CRM_OPERATIONS,
+  findOperation,
+  runCrmOperation,
+} from "@/lib/crm/operations";
 import { CrmError } from "@/lib/crm/service";
 
 const USAGE = `Usage: npm run -s crm -- <command> [--field value ...] [options]
@@ -37,7 +41,9 @@ function assign(target: Record<string, unknown>, path: string, value: unknown) {
   const last = keys[keys.length - 1];
   if (last in node) {
     const existing = node[last];
-    node[last] = Array.isArray(existing) ? [...existing, value] : [existing, value];
+    node[last] = Array.isArray(existing)
+      ? [...existing, value]
+      : [existing, value];
   } else {
     node[last] = value;
   }
@@ -55,7 +61,9 @@ function readInputFile(file: string, command: string): Record<string, unknown> {
   const data = JSON.parse(text);
   if (Array.isArray(data)) {
     if (command !== "import_companies") {
-      throw new CrmError("A JSON array input only works with import_companies.");
+      throw new CrmError(
+        "A JSON array input only works with import_companies.",
+      );
     }
     return { companies: data };
   }
@@ -66,14 +74,19 @@ function describeCommand(name: string) {
   const operation = findOperation(name);
   if (!operation) throw new CrmError(`Unknown command "${name}".`);
   const schema = z.toJSONSchema(operation.input, { io: "input" }) as {
-    properties?: Record<string, { description?: string; type?: string; enum?: unknown[] }>;
+    properties?: Record<
+      string,
+      { description?: string; type?: string; enum?: unknown[] }
+    >;
     required?: string[];
   };
   const lines = [`${operation.name} — ${operation.description}`, ""];
   for (const [key, field] of Object.entries(schema.properties ?? {})) {
     const required = schema.required?.includes(key) ? " (required)" : "";
     const type = field.enum ? field.enum.join("|") : (field.type ?? "object");
-    lines.push(`  --${key} <${type}>${required}${field.description ? `  ${field.description}` : ""}`);
+    lines.push(
+      `  --${key} <${type}>${required}${field.description ? `  ${field.description}` : ""}`,
+    );
   }
   return lines.join("\n");
 }
@@ -90,7 +103,9 @@ async function callRemote(url: string, command: string, input: unknown) {
     },
     body: JSON.stringify(input),
   });
-  const body = await response.json().catch(() => ({ error: response.statusText }));
+  const body = await response
+    .json()
+    .catch(() => ({ error: response.statusText }));
   if (!response.ok) throw new CrmError(body.error ?? `HTTP ${response.status}`);
   return body;
 }
@@ -110,7 +125,8 @@ async function main(argv: string[]) {
   }
 
   const command = rawCommand.replace(/-/g, "_");
-  if (!findOperation(command)) throw new CrmError(`Unknown command "${rawCommand}". Run "help".`);
+  if (!findOperation(command))
+    throw new CrmError(`Unknown command "${rawCommand}". Run "help".`);
 
   let input: Record<string, unknown> = {};
   let pick: string | undefined;
@@ -118,7 +134,8 @@ async function main(argv: string[]) {
 
   for (let i = 0; i < rest.length; i++) {
     const flag = rest[i];
-    if (!flag.startsWith("--")) throw new CrmError(`Unexpected argument "${flag}".`);
+    if (!flag.startsWith("--"))
+      throw new CrmError(`Unexpected argument "${flag}".`);
     const key = flag.slice(2);
     if (key === "help") {
       console.log(describeCommand(command));
@@ -131,7 +148,8 @@ async function main(argv: string[]) {
     }
     i++;
     if (key === "json") input = { ...input, ...JSON.parse(value) };
-    else if (key === "input") input = { ...input, ...readInputFile(value, command) };
+    else if (key === "input")
+      input = { ...input, ...readInputFile(value, command) };
     else if (key === "pick") pick = value;
     else if (key === "url") url = value;
     else assign(input, key, parseValue(value));
@@ -147,7 +165,9 @@ async function main(argv: string[]) {
 
   if (pick) {
     const value = (result as Record<string, unknown>)[pick];
-    console.log(typeof value === "string" ? value : JSON.stringify(value, null, 2));
+    console.log(
+      typeof value === "string" ? value : JSON.stringify(value, null, 2),
+    );
     return;
   }
   console.log(JSON.stringify(result, null, 2));

@@ -36,9 +36,13 @@ export function parseCsv(text: string): Record<string, string>[] {
     rows.push(row);
   }
 
-  const [header = [], ...body] = rows.filter((cells) => cells.some((value) => value.trim()));
+  const [header = [], ...body] = rows.filter((cells) =>
+    cells.some((value) => value.trim()),
+  );
   return body.map((cells) =>
-    Object.fromEntries(header.map((key, index) => [key.trim(), (cells[index] ?? "").trim()])),
+    Object.fromEntries(
+      header.map((key, index) => [key.trim(), (cells[index] ?? "").trim()]),
+    ),
   );
 }
 
@@ -83,7 +87,10 @@ export function csvRowsToCompanies(rows: Record<string, string>[]) {
       }
       if (!value) continue;
       if (field === "tags") {
-        company.tags = value.split(/[;|]/).map((tag) => tag.trim()).filter(Boolean);
+        company.tags = value
+          .split(/[;|]/)
+          .map((tag) => tag.trim())
+          .filter(Boolean);
       } else if (field === "lastInteractionDate") {
         date = value;
       } else if (field === "lastInteractionLabel") {

@@ -6,7 +6,12 @@ import {
   type SortKey,
   type Tag,
 } from "@/data/companies";
-import { ALL_OWNERS, ANY_STAGE, companiesCsvRows, filterCompanies } from "@/lib/companies";
+import {
+  ALL_OWNERS,
+  ANY_STAGE,
+  companiesCsvRows,
+  filterCompanies,
+} from "@/lib/companies";
 import { toCsv } from "@/lib/csv";
 import {
   CrmError,
@@ -47,7 +52,9 @@ const SORT_KEYS = SORT_OPTIONS.map((option) => option.value) as [
 const workspaceField = z
   .string()
   .optional()
-  .describe("Workspace id from list_workspaces. Defaults to the first workspace.");
+  .describe(
+    "Workspace id from list_workspaces. Defaults to the first workspace.",
+  );
 
 const companyRef = z
   .string()
@@ -63,22 +70,38 @@ const interaction = z.object({
   label: z
     .string()
     .min(1)
-    .describe("What happened, e.g. a value from interactionTypes (Discovery, Demo, QBR Call) or a short note."),
+    .describe(
+      "What happened, e.g. a value from interactionTypes (Discovery, Demo, QBR Call) or a short note.",
+    ),
   date: isoDate.optional().describe("Defaults to today."),
 });
 
 const companyFields = {
   name: z.string().trim().min(1).describe("Company name."),
-  owner: z.string().describe("Account owner name. Must be one of the workspace owners."),
+  owner: z
+    .string()
+    .describe("Account owner name. Must be one of the workspace owners."),
   tags: z
     .array(z.string())
-    .describe("Tags from the workspace tag groups (segment and stage in the demo workspace)."),
+    .describe(
+      "Tags from the workspace tag groups (segment and stage in the demo workspace).",
+    ),
   openDeals: z.coerce.number().int().min(0).describe("Number of open deals."),
-  pipelineValue: z.coerce.number().min(0).describe("Pipeline value in dollars."),
-  winProbability: z.coerce.number().int().min(0).max(100).describe("Win probability, 0-100."),
+  pipelineValue: z.coerce
+    .number()
+    .min(0)
+    .describe("Pipeline value in dollars."),
+  winProbability: z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(100)
+    .describe("Win probability, 0-100."),
   lastInteraction: interaction.describe("Most recent touchpoint."),
   logo: z.string().describe("Logo URL or path."),
-  trend: z.array(z.number()).describe("Activity sparkline values, oldest first."),
+  trend: z
+    .array(z.number())
+    .describe("Activity sparkline values, oldest first."),
 };
 
 const companyInput = z.object({
@@ -95,7 +118,9 @@ const companyInput = z.object({
     .string()
     .regex(/^[a-z0-9_][a-z0-9_-]*$/, "Use a lowercase slug")
     .optional()
-    .describe("Stable id (lowercase slug). Generated from the name when omitted."),
+    .describe(
+      "Stable id (lowercase slug). Generated from the name when omitted.",
+    ),
 });
 
 const companyPatch = z
@@ -115,10 +140,15 @@ const listFilters = {
     .int()
     .min(0)
     .optional()
-    .describe("Only companies touched within this many days (the UI's activity window)."),
+    .describe(
+      "Only companies touched within this many days (the UI's activity window).",
+    ),
   minWinProbability: z.coerce.number().min(0).max(100).optional(),
   minPipelineValue: z.coerce.number().min(0).optional(),
-  sortBy: z.enum(SORT_KEYS).optional().describe("Defaults to pipelineValue (descending)."),
+  sortBy: z
+    .enum(SORT_KEYS)
+    .optional()
+    .describe("Defaults to pipelineValue (descending)."),
 };
 
 type ListFilters = {
@@ -141,7 +171,8 @@ function applyFilters(
   const query = filters.query?.trim().toLowerCase();
   const matches = companies.filter((company) => {
     if (owner && company.owner !== owner) return false;
-    if (tag && !company.tags.some((item) => item.toLowerCase() === tag)) return false;
+    if (tag && !company.tags.some((item) => item.toLowerCase() === tag))
+      return false;
     if (
       filters.activityWithinDays !== undefined &&
       company.activityDays > filters.activityWithinDays
@@ -161,7 +192,12 @@ function applyFilters(
       return false;
     }
     if (query) {
-      const haystack = [company.name, company.id, company.owner, ...company.tags]
+      const haystack = [
+        company.name,
+        company.id,
+        company.owner,
+        ...company.tags,
+      ]
         .join(" ")
         .toLowerCase();
       if (!haystack.includes(query)) return false;
@@ -228,7 +264,9 @@ function buildCompany(
   return withInteraction(
     workspace,
     base,
-    input.lastInteraction ?? { label: workspace.interactionTypes[0] ?? "Created" },
+    input.lastInteraction ?? {
+      label: workspace.interactionTypes[0] ?? "Created",
+    },
   );
 }
 
@@ -239,9 +277,12 @@ function applyPatch(
 ): Company {
   const { lastInteraction, ...rest } = patch;
   let next: Company = { ...company, ...(rest as Partial<Company>) };
-  if (patch.owner !== undefined) next.owner = assertOwner(workspace, patch.owner);
-  if (patch.tags !== undefined) next.tags = assertTags(workspace, patch.tags) as Tag[];
-  if (patch.pipelineValue !== undefined) next.pipelineValue = Math.round(patch.pipelineValue);
+  if (patch.owner !== undefined)
+    next.owner = assertOwner(workspace, patch.owner);
+  if (patch.tags !== undefined)
+    next.tags = assertTags(workspace, patch.tags) as Tag[];
+  if (patch.pipelineValue !== undefined)
+    next.pipelineValue = Math.round(patch.pipelineValue);
   if (lastInteraction) next = withInteraction(workspace, next, lastInteraction);
   return next;
 }
@@ -252,11 +293,21 @@ function changedKeys(before: Company, after: Company) {
   );
 }
 
-function groupTotals(companies: Company[], keyOf: (company: Company) => string[]) {
-  const groups = new Map<string, { companies: number; pipelineValue: number; openDeals: number }>();
+function groupTotals(
+  companies: Company[],
+  keyOf: (company: Company) => string[],
+) {
+  const groups = new Map<
+    string,
+    { companies: number; pipelineValue: number; openDeals: number }
+  >();
   for (const company of companies) {
     for (const key of keyOf(company)) {
-      const group = groups.get(key) ?? { companies: 0, pipelineValue: 0, openDeals: 0 };
+      const group = groups.get(key) ?? {
+        companies: 0,
+        pipelineValue: 0,
+        openDeals: 0,
+      };
       group.companies += 1;
       group.pipelineValue += company.pipelineValue;
       group.openDeals += company.openDeals;
@@ -272,7 +323,8 @@ export const CRM_OPERATIONS: CrmOperation[] = [
   operation({
     name: "list_workspaces",
     title: "List workspaces",
-    description: "List the CRM workspaces (separate pipelines) with company counts. Start here.",
+    description:
+      "List the CRM workspaces (separate pipelines) with company counts. Start here.",
     input: z.object({}),
     readOnly: true,
     async run() {
@@ -307,7 +359,11 @@ export const CRM_OPERATIONS: CrmOperation[] = [
         today: workspace.today,
         revision: state.revision,
         companies: companies.length,
-        owners: workspace.owners.map(({ name, role, email }) => ({ name, role, email })),
+        owners: workspace.owners.map(({ name, role, email }) => ({
+          name,
+          role,
+          email,
+        })),
         tagGroups: workspace.tagGroups,
         interactionTypes: workspace.interactionTypes,
         sortKeys: SORT_KEYS,
@@ -349,7 +405,8 @@ export const CRM_OPERATIONS: CrmOperation[] = [
   operation({
     name: "get_company",
     title: "Get company",
-    description: "Fetch one company with every field, plus its recent activity log.",
+    description:
+      "Fetch one company with every field, plus its recent activity log.",
     input: z.object({ workspace: workspaceField, company: companyRef }),
     readOnly: true,
     async run({ workspace: id, company: ref }) {
@@ -380,8 +437,13 @@ export const CRM_OPERATIONS: CrmOperation[] = [
       const workspace = resolveWorkspace(id);
       const { companies } = await readCompanies(workspace);
       const matches = applyFilters(workspace, companies, filters);
-      const pipelineValue = matches.reduce((sum, company) => sum + company.pipelineValue, 0);
-      const stale = matches.filter((company) => company.activityDays > staleAfterDays);
+      const pipelineValue = matches.reduce(
+        (sum, company) => sum + company.pipelineValue,
+        0,
+      );
+      const stale = matches.filter(
+        (company) => company.activityDays > staleAfterDays,
+      );
       return {
         workspace: workspace.id,
         companies: matches.length,
@@ -389,14 +451,17 @@ export const CRM_OPERATIONS: CrmOperation[] = [
         pipelineValue,
         weightedPipelineValue: Math.round(
           matches.reduce(
-            (sum, company) => sum + (company.pipelineValue * company.winProbability) / 100,
+            (sum, company) =>
+              sum + (company.pipelineValue * company.winProbability) / 100,
             0,
           ),
         ),
         averageWinProbability: matches.length
           ? Math.round(
-              matches.reduce((sum, company) => sum + company.winProbability, 0) /
-                matches.length,
+              matches.reduce(
+                (sum, company) => sum + company.winProbability,
+                0,
+              ) / matches.length,
             )
           : 0,
         byTag: groupTotals(matches, (company) => company.tags),
@@ -421,7 +486,10 @@ export const CRM_OPERATIONS: CrmOperation[] = [
     input: z.object({
       workspace: workspaceField,
       company: companyRef.optional(),
-      since: z.string().optional().describe("ISO timestamp; only entries after it."),
+      since: z
+        .string()
+        .optional()
+        .describe("ISO timestamp; only entries after it."),
       limit: z.coerce.number().int().min(1).max(500).default(25),
     }),
     readOnly: true,
@@ -442,7 +510,8 @@ export const CRM_OPERATIONS: CrmOperation[] = [
   operation({
     name: "get_revision",
     title: "Get revision",
-    description: "Cheap change counter for a workspace. It increases on every write.",
+    description:
+      "Cheap change counter for a workspace. It increases on every write.",
     input: z.object({ workspace: workspaceField }),
     readOnly: true,
     async run({ workspace: id }) {
@@ -454,7 +523,8 @@ export const CRM_OPERATIONS: CrmOperation[] = [
   operation({
     name: "export_companies_csv",
     title: "Export CSV",
-    description: "Export companies as CSV with the same columns as the toolbar's Export button.",
+    description:
+      "Export companies as CSV with the same columns as the toolbar's Export button.",
     input: z.object({ workspace: workspaceField, ...listFilters }),
     readOnly: true,
     async run({ workspace: id, ...filters }) {
@@ -584,7 +654,8 @@ export const CRM_OPERATIONS: CrmOperation[] = [
   operation({
     name: "delete_company",
     title: "Delete company",
-    description: "Remove a company from the workspace. reset_workspace brings seeded companies back.",
+    description:
+      "Remove a company from the workspace. reset_workspace brings seeded companies back.",
     input: z.object({ workspace: workspaceField, company: companyRef }),
     destructive: true,
     async run({ workspace: id, company: ref }, context) {
@@ -628,7 +699,8 @@ export const CRM_OPERATIONS: CrmOperation[] = [
             const existing =
               (row.id && companies.find((company) => company.id === row.id)) ||
               companies.find(
-                (company) => company.name.toLowerCase() === row.name.toLowerCase(),
+                (company) =>
+                  company.name.toLowerCase() === row.name.toLowerCase(),
               );
             if (!existing) {
               const company = buildCompany(workspace, companies, row);
@@ -732,7 +804,9 @@ export async function runCrmOperation(
   }
   const parsed = definition.input.safeParse(input ?? {});
   if (!parsed.success) {
-    throw new CrmError(`Invalid input for ${definition.name}: ${z.prettifyError(parsed.error)}`);
+    throw new CrmError(
+      `Invalid input for ${definition.name}: ${z.prettifyError(parsed.error)}`,
+    );
   }
   return definition.run(parsed.data, context);
 }

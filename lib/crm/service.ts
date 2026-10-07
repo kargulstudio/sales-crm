@@ -1,11 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { Company } from "@/data/companies";
 import { slugify } from "@/lib/utils";
-import {
-  getCrmStore,
-  type CrmActor,
-  type WorkspaceState,
-} from "./store";
+import { getCrmStore, type CrmActor, type WorkspaceState } from "./store";
 import {
   CRM_WORKSPACES,
   DEFAULT_CRM_WORKSPACE_ID,
@@ -143,7 +139,9 @@ export async function mutate<T>(
       },
       put(company) {
         if (baseIds.has(company.id) && !state.deleted.includes(company.id)) {
-          const base = workspace.companies.find((item) => item.id === company.id)!;
+          const base = workspace.companies.find(
+            (item) => item.id === company.id,
+          )!;
           const patch: Partial<Company> = {};
           for (const key of Object.keys(company) as (keyof Company)[]) {
             if (JSON.stringify(company[key]) !== JSON.stringify(base[key])) {

@@ -6,7 +6,11 @@ import { runCrmOperation } from "./operations";
 type CompanyPage = { revision: number; total: number; companies: Company[] };
 
 export async function loadCrmRevision() {
-  const { revision } = (await runCrmOperation("get_revision", {}, { actor: "ui" })) as {
+  const { revision } = (await runCrmOperation(
+    "get_revision",
+    {},
+    { actor: "ui" },
+  )) as {
     revision: number;
   };
   return revision;

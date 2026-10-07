@@ -58,7 +58,8 @@ export class FileCrmStore implements CrmStore {
       const raw = await readFile(this.file(workspaceId), "utf8");
       return { ...emptyState(), ...JSON.parse(raw) };
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") return emptyState();
+      if ((error as NodeJS.ErrnoException).code === "ENOENT")
+        return emptyState();
       throw error;
     }
   }
@@ -111,7 +112,9 @@ export class FileCrmStore implements CrmStore {
           continue;
         }
         if (Date.now() - started > LOCK_TIMEOUT_MS) {
-          throw new Error(`Timed out waiting for the CRM store lock at ${lock}`);
+          throw new Error(
+            `Timed out waiting for the CRM store lock at ${lock}`,
+          );
         }
         await sleep(25);
       }
