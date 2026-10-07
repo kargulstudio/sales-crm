@@ -37,6 +37,7 @@ type CompaniesState = {
   markAllNotificationsRead: () => void;
   setActiveTab: (tab: string) => void;
   addCompany: (company: Company) => void;
+  setCompanies: (companies: Company[]) => void;
 };
 
 export const useCompaniesStore = create<CompaniesState>((set) => ({
@@ -88,4 +89,5 @@ export const useCompaniesStore = create<CompaniesState>((set) => ({
       companies: [company, ...state.companies],
       newCompanyOpen: false,
     })),
+  setCompanies: (companies) => set({ companies }),
 }));
