@@ -25,6 +25,7 @@ import { Slider } from "@/components/_ui/slider";
 import SegmentBar from "@/components/_common/segment-bar";
 import FormSection from "./form-section";
 import LogoUpload from "./logo-upload";
+import { notifyCrmChanged } from "../crm-sync";
 import {
   DEFAULT_TREND,
   INTERACTION_TYPES,
@@ -36,6 +37,7 @@ import {
   type Stage,
 } from "@/data/companies";
 import { TODAY, daysSince } from "@/lib/companies";
+import { createCrmCompany } from "@/lib/crm/actions";
 import { slugify } from "@/lib/utils";
 import { useCompaniesStore } from "@/stores/companies-store";
 import PlusIcon from "@/public/assets/images/_common/plus.svg";
@@ -105,6 +107,9 @@ export default function NewCompanyDialog() {
     };
 
     addCompany(company);
+    createCrmCompany(company).then(notifyCrmChanged, (error) =>
+      console.error("Could not save company", error),
+    );
   }
 
   return (

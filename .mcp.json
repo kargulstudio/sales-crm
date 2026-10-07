@@ -3,6 +3,15 @@
     "supabase": {
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=noolofgfrxeoajyozkkg&features=docs%2Caccount%2Cdatabase%2Cdebugging%2Cdevelopment%2Cfunctions%2Cbranching"
+    },
+    "sales-crm": {
+      "type": "stdio",
+      "command": "npm",
+      "args": [
+        "run",
+        "-s",
+        "mcp"
+      ]
     }
   }
 }

@@ -5,6 +5,7 @@ import CompanyDetail from "./detail/company-detail";
 import Profile from "./profile/profile";
 import NewCompanyDialog from "./new-company/new-company-dialog";
 import CommandMenu from "./command-menu/command-menu";
+import CrmSync from "./crm-sync";
 
 export default function Companies() {
   return (
@@ -16,6 +17,7 @@ export default function Companies() {
       <Profile />
       <NewCompanyDialog />
       <CommandMenu />
+      <CrmSync />
     </section>
   );
 }
