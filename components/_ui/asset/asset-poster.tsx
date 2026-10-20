@@ -28,7 +28,7 @@ function AssetPoster({
       className={assetMediaClass(
         fit,
         cn(
-          "ease-power3-in pointer-events-none z-10 transition-opacity duration-500",
+          "ease-power3-in z-sticky duration-panel pointer-events-none transition-opacity",
           visible ? "opacity-100" : "opacity-0",
           className,
         ),

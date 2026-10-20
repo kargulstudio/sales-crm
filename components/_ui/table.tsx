@@ -5,7 +5,7 @@ function Table({ className, ...props }: ComponentProps<"table">) {
   return (
     <table
       data-slot="table"
-      className={cn("w-full border-collapse text-[14px] leading-none", className)}
+      className={cn("w-full border-collapse text-sm leading-none", className)}
       {...props}
     />
   );
@@ -24,7 +24,7 @@ function TableRow({ className, ...props }: ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b border-border transition-colors duration-150 ease-power3-out",
+        "border-border duration-fast ease-power3-out border-b transition-colors",
         className,
       )}
       {...props}
@@ -37,7 +37,7 @@ function TableHead({ className, ...props }: ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "caption-style h-[38px] px-3 text-left align-middle font-normal whitespace-nowrap text-subtle",
+        "caption-style text-fg-tertiary h-9.5 px-3 text-left align-middle font-normal whitespace-nowrap",
         className,
       )}
       {...props}
@@ -49,7 +49,7 @@ function TableCell({ className, ...props }: ComponentProps<"td">) {
   return (
     <td
       data-slot="table-cell"
-      className={cn("h-[42px] px-3 align-middle whitespace-nowrap", className)}
+      className={cn("h-row px-3 align-middle whitespace-nowrap", className)}
       {...props}
     />
   );

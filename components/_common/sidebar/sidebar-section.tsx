@@ -15,7 +15,7 @@ export default function SidebarSection({
   return (
     <div className={cn("flex flex-col gap-1 p-3", className)}>
       {title && (
-        <span className="eyebrow-style block font-medium text-faint">
+        <span className="eyebrow-style text-fg-tertiary block px-2 font-medium">
           {title}
         </span>
       )}

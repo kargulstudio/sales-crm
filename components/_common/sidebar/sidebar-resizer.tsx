@@ -119,11 +119,11 @@ export default function SidebarResizer() {
       onPointerCancel={handlePointerEnd}
       onDoubleClick={handleReset}
       onKeyDown={handleKeyDown}
-      className="group absolute inset-y-0 -right-1 z-10 w-2 cursor-col-resize touch-none outline-none select-none"
+      className="group z-sticky absolute inset-y-0 -right-1 w-2 cursor-col-resize touch-none outline-none select-none"
     >
       <span
         aria-hidden
-        className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-transparent transition-[background-color] duration-150 ease-power3-out group-hover:bg-line-strong group-focus-visible:bg-subtle group-active:bg-subtle"
+        className="duration-fast ease-power3-out group-hover:bg-line-strong group-focus-visible:bg-fg-tertiary group-active:bg-fg-tertiary absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-transparent transition-[background-color]"
       />
     </div>
   );

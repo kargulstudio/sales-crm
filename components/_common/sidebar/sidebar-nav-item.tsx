@@ -8,6 +8,9 @@ type SidebarNavItemProps = {
   label: string;
   count?: number;
   active?: boolean;
+  pressed?: boolean;
+  onClick?: () => void;
+  soon?: boolean;
   tone?: "default" | "quiet";
   iconClassName?: string;
 };
@@ -17,6 +20,9 @@ export default function SidebarNavItem({
   label,
   count,
   active = false,
+  pressed,
+  onClick,
+  soon = false,
   tone = "default",
   iconClassName,
 }: SidebarNavItemProps) {
@@ -25,22 +31,29 @@ export default function SidebarNavItem({
       <Button
         variant="nav"
         size="md"
-        data-active={active}
+        data-active={active || pressed === true}
         aria-current={active ? "page" : undefined}
+        aria-pressed={pressed}
+        onClick={onClick}
+        disabled={soon}
         className={cn(
-          "group h-[30px] gap-1.5 py-0 data-[active=true]:h-8",
-          tone === "quiet" && "text-subtle",
+          "group h-control-md gap-1.5 py-0 data-[active=true]:h-8",
+          tone === "quiet" && "text-fg-tertiary",
         )}
       >
         <Icon
           aria-hidden
           className={cn(
-            "text-subtle ease-power3-out group-hover:text-icon group-data-[active=true]:text-icon size-3.5 shrink-0 transition-colors duration-150",
+            "text-fg-tertiary ease-power3-out group-hover:text-icon group-data-[active=true]:text-icon duration-fast size-3.5 shrink-0 transition-colors",
             iconClassName,
           )}
         />
         <span className="min-w-0 flex-1 truncate text-left">{label}</span>
-        {count !== undefined && <CountBadge>{count}</CountBadge>}
+        {soon ? (
+          <span className="caption-style text-fg-tertiary shrink-0">Soon</span>
+        ) : (
+          count !== undefined && <CountBadge>{count}</CountBadge>
+        )}
       </Button>
     </li>
   );

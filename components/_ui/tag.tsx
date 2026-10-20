@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const tagVariants = cva(
-  "inline-flex h-[22px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border text-[14px] leading-none",
+  "inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border text-sm leading-none tabular-nums",
   {
     variants: {
       tone: {
@@ -25,8 +25,9 @@ export const tagVariants = cva(
           "border-(--tag-neutral-border) bg-(--tag-neutral-bg) text-(--tag-neutral-text)",
       },
       size: {
-        md: "px-2",
-        sm: "px-1.5",
+        md: "h-5.5 px-2",
+        sm: "h-5.5 px-1.5",
+        xs: "caption-style h-5 gap-1 px-1.5",
       },
     },
     defaultVariants: {

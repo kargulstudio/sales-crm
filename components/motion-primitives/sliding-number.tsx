@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId } from "react";
+import { Fragment, useEffect, useId } from "react";
 import {
   MotionValue,
   motion,
@@ -78,12 +78,14 @@ type SlidingNumberProps = {
   value: number;
   padStart?: boolean;
   decimalSeparator?: string;
+  thousandsSeparator?: string;
 };
 
 export function SlidingNumber({
   value,
   padStart = false,
   decimalSeparator = ".",
+  thousandsSeparator,
 }: SlidingNumberProps) {
   const absValue = Math.abs(value);
   const [integerPart, decimalPart] = absValue.toString().split(".");
@@ -98,13 +100,17 @@ export function SlidingNumber({
   return (
     <div className="flex items-center">
       {value < 0 && "-"}
-      {integerDigits.map((_, index) => (
-        <Digit
-          key={`pos-${integerPlaces[index]}`}
-          value={integerValue}
-          place={integerPlaces[index]}
-        />
-      ))}
+      {integerDigits.map((_, index) => {
+        const remaining = integerDigits.length - index - 1;
+        return (
+          <Fragment key={`pos-${integerPlaces[index]}`}>
+            <Digit value={integerValue} place={integerPlaces[index]} />
+            {thousandsSeparator && remaining > 0 && remaining % 3 === 0 && (
+              <span>{thousandsSeparator}</span>
+            )}
+          </Fragment>
+        );
+      })}
       {decimalPart && (
         <>
           <span>{decimalSeparator}</span>

@@ -7,7 +7,7 @@ import {
   type ChangeEvent,
   type DragEvent,
 } from "react";
-import Asset from "@/components/_ui/asset";
+import CompanyLogo from "@/components/companies/company-logo";
 import Button from "@/components/_ui/button";
 import { cn } from "@/lib/utils";
 import BuildingIcon from "@/public/assets/images/companies/sidebar/building.svg";
@@ -18,12 +18,14 @@ const ACCEPTED = ["image/png", "image/jpeg", "image/webp", "image/svg+xml"];
 type LogoUploadProps = {
   value: string | null;
   companyName: string;
+  domain: string | null;
   onChange: (value: string | null) => void;
 };
 
 export default function LogoUpload({
   value,
   companyName,
+  domain,
   onChange,
 }: LogoUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,25 +73,22 @@ export default function LogoUpload({
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
       data-dragging={dragging}
-      className="ease-power3-out data-[dragging=true]:border-line-strong flex items-center gap-4 rounded-xl border border-dashed border-transparent transition-[border-color,background-color] duration-150 data-[dragging=true]:bg-white/3"
+      className="ease-power3-out data-[dragging=true]:border-line-strong duration-fast data-[dragging=true]:bg-overlay-1 flex items-center gap-4 rounded-xl border border-dashed border-transparent transition-[border-color,background-color]"
     >
-      <span className="bg-muted flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[14px] shadow-[0px_6px_6px_0px_rgba(15,15,15,0.24),0px_0px_0px_1.5px_#232323]">
-        {value ? (
-          <Asset
-            type="image"
-            src={value}
-            alt="Company logo preview"
-            width={1}
-            height={1}
-            fit="contain"
-            className="size-9"
-          />
-        ) : initial ? (
-          <span className="h2-style text-soft">{initial}</span>
-        ) : (
-          <BuildingIcon aria-hidden className="text-subtle size-5" />
-        )}
-      </span>
+      {value || domain || initial ? (
+        <CompanyLogo
+          company={{
+            name: companyName || "?",
+            logo: value ?? undefined,
+            domain: domain ?? undefined,
+          }}
+          size="xl"
+        />
+      ) : (
+        <span className="bg-muted shadow-tile flex size-14 shrink-0 items-center justify-center rounded-xl">
+          <BuildingIcon aria-hidden className="text-fg-tertiary size-5" />
+        </span>
+      )}
 
       <div className="flex min-w-0 flex-col gap-2">
         <div className="flex flex-wrap items-center gap-2">
@@ -118,12 +117,14 @@ export default function LogoUpload({
           id={hintId}
           role={error ? "alert" : undefined}
           className={cn(
-            "caption-style block",
-            error ? "text-danger" : "text-subtle",
+            "caption-style block leading-snug",
+            error ? "text-danger" : "text-fg-tertiary",
           )}
         >
           {error ??
-            "PNG, JPG, WebP or SVG up to 2 MB. You can also drop a file here."}
+            (domain && !value
+              ? "Using the logo from the website. Upload one to replace it."
+              : "PNG, JPG, WebP or SVG up to 2 MB. You can also drop a file here.")}
         </span>
       </div>
 

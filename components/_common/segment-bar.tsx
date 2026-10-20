@@ -42,7 +42,7 @@ export default function SegmentBar({
       aria-valuemax={100}
       aria-valuenow={percent}
       className={cn(
-        "flex h-[14px] items-center gap-[2px] overflow-hidden rounded-[2px] bg-white/8 px-[2px]",
+        "bg-overlay-3 flex h-3.5 items-center gap-0.5 overflow-hidden rounded-xs px-0.5",
         className,
       )}
     >
@@ -50,7 +50,7 @@ export default function SegmentBar({
         <span
           key={index}
           className={cn(
-            "h-[10px] min-w-px flex-1 rounded-[1px]",
+            "h-2.5 min-w-px flex-1 rounded-xs",
             segmentClassName,
             index < filled
               ? tone === "auto"

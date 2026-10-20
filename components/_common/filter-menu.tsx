@@ -38,28 +38,30 @@ export default function FilterMenu({
       <DropdownMenuTrigger asChild>
         <Button
           variant="secondary"
-          size="none"
+          size="control"
           className={cn(
-            "group h-[30px] gap-0 overflow-hidden text-[12px] data-[state=open]:bg-muted",
+            "group data-[state=open]:bg-muted gap-0 overflow-hidden",
             className,
           )}
         >
           {label && (
             <>
-              <span className="px-[9px] font-normal text-subtle">{label}</span>
-              <span aria-hidden className="h-full w-px bg-white/8" />
+              <span className="text-fg-tertiary px-2.25 font-normal">
+                {label}
+              </span>
+              <span aria-hidden className="bg-overlay-3 h-full w-px" />
             </>
           )}
           <span
             className={cn(
-              "flex items-center px-[9px]",
+              "flex items-center px-2.25",
               label ? "gap-1.5" : "gap-1",
             )}
           >
             {current?.label ?? value}
             <ChevronDownIcon
               aria-hidden
-              className="size-3 text-[#898b8d] transition-transform duration-200 ease-power3-out group-data-[state=open]:rotate-180"
+              className="text-fg-tertiary duration-base ease-power3-out size-3 transition-transform group-data-[state=open]:rotate-180"
             />
           </span>
         </Button>

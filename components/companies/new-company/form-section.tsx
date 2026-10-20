@@ -15,11 +15,11 @@ export default function FormSection({
   return (
     <fieldset
       className={cn(
-        "flex min-w-0 flex-col gap-4 px-6 py-5 shadow-[inset_0_-1px_0_var(--line-strong)] last:shadow-none",
+        "shadow-divider flex min-w-0 flex-col gap-4 px-6 py-5 last:shadow-none",
         className,
       )}
     >
-      <legend className="eyebrow-style text-soft float-left mb-0 w-full">
+      <legend className="eyebrow-style text-fg-secondary float-left mb-0 w-full">
         {title}
       </legend>
       {children}

@@ -1,16 +1,27 @@
 "use client";
 
-import type { ComponentProps } from "react";
+import { createContext, useContext, useId, type ComponentProps } from "react";
+import { motion } from "motion/react";
 import { Tabs as TabsPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
 
-function Tabs({ className, ...props }: ComponentProps<typeof TabsPrimitive.Root>) {
+const TabsContext = createContext<{ value?: string; id: string }>({ id: "" });
+
+function Tabs({
+  className,
+  value,
+  ...props
+}: ComponentProps<typeof TabsPrimitive.Root>) {
+  const id = useId();
   return (
-    <TabsPrimitive.Root
-      data-slot="tabs"
-      className={cn("flex flex-col", className)}
-      {...props}
-    />
+    <TabsContext.Provider value={{ value, id }}>
+      <TabsPrimitive.Root
+        data-slot="tabs"
+        value={value}
+        className={cn("flex flex-col", className)}
+        {...props}
+      />
+    </TabsContext.Provider>
   );
 }
 
@@ -30,17 +41,28 @@ function TabsList({
 function TabsTrigger({
   className,
   children,
+  value,
   ...props
 }: ComponentProps<typeof TabsPrimitive.Trigger>) {
+  const tabs = useContext(TabsContext);
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "group caption-style -mb-px grid cursor-pointer text-center border-b border-transparent py-4 text-subtle outline-none select-none transition-[color,border-color] duration-150 ease-power3-out hover:text-soft focus-visible:text-foreground data-[state=active]:border-foreground data-[state=active]:text-foreground",
+        "group caption-style text-fg-tertiary duration-fast ease-power3-out hover:text-fg-secondary focus-visible:text-foreground focus-visible:decoration-ring data-[state=active]:text-foreground relative grid cursor-pointer py-4 text-center transition-[color] outline-none select-none focus-visible:underline focus-visible:underline-offset-4",
         className,
       )}
+      value={value}
       {...props}
     >
+      {tabs.value === value && (
+        <motion.span
+          aria-hidden
+          layoutId={`${tabs.id}-indicator`}
+          transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+          className="bg-foreground absolute inset-x-0 bottom-0 h-px"
+        />
+      )}
       <span
         aria-hidden
         className="invisible col-start-1 row-start-1 font-medium"

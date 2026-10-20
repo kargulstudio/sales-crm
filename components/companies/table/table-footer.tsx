@@ -1,25 +1,65 @@
-import PlusIcon from "@/public/assets/images/_common/plus.svg";
+"use client";
+
+import { SlidingNumber } from "@/components/motion-primitives/sliding-number";
+import type { Company } from "@/data/companies";
+import { formatMoney } from "@/lib/companies";
+import { cn } from "@/lib/utils";
+import Skeleton from "@/components/_ui/skeleton";
 
 type TableFooterProps = {
-  count: number;
+  companies: Company[];
+  loading?: boolean;
 };
 
-const CALCULATIONS = ["Sum of pipeline", "Avg win probality", "Add Calculation"];
+export default function TableFooter({ companies, loading }: TableFooterProps) {
+  const pipeline = companies.reduce((sum, c) => sum + c.pipelineValue, 0);
+  const openDeals = companies.reduce((sum, c) => sum + c.openDeals, 0);
+  const avgWin = companies.length
+    ? Math.round(
+        companies.reduce((sum, c) => sum + c.winProbability, 0) /
+          companies.length,
+      )
+    : 0;
 
-export default function TableFooter({ count }: TableFooterProps) {
+  const stats = [
+    { label: "Companies in view", value: companies.length },
+    { label: "Pipeline", value: pipeline, prefix: "$" },
+    { label: "Avg win", value: avgWin, suffix: "%" },
+    { label: "Open deals", value: openDeals },
+  ];
+
   return (
-    <div className="caption-style grid shrink-0 grid-cols-2 gap-px border-b border-border bg-background p-px sm:grid-cols-4">
-      <div className="flex items-center gap-2 p-3 outline-1 outline-border">
-        <span className="text-foreground">{count}</span>
-        <span className="text-muted-foreground">Companies in view</span>
-      </div>
-      {CALCULATIONS.map((label) => (
+    <div className="caption-style border-border bg-background short:grid-cols-2 grid shrink-0 grid-cols-2 gap-px overflow-hidden border-y sm:grid-cols-4">
+      {stats.map((stat, index) => (
         <div
-          key={label}
-          className="flex items-center gap-2 p-3 text-muted-foreground outline-1 outline-border"
+          key={stat.label}
+          className={cn(
+            "outline-border flex items-center gap-2 px-4 py-3 outline-1",
+            index > 1 && "short:hidden",
+          )}
         >
-          <PlusIcon aria-hidden className="size-3 text-muted-foreground" />
-          {label}
+          {loading ? (
+            <Skeleton className="h-3 w-10" />
+          ) : (
+            <>
+              <span className="sr-only">
+                {stat.prefix}
+                {formatMoney(stat.value)}
+                {stat.suffix}
+              </span>
+              <span
+                aria-hidden
+                className="text-foreground flex items-center tabular-nums"
+              >
+                {stat.prefix && (
+                  <span className="text-fg-tertiary mr-0.5">{stat.prefix}</span>
+                )}
+                <SlidingNumber value={stat.value} thousandsSeparator="," />
+                {stat.suffix}
+              </span>
+            </>
+          )}
+          <span className="text-fg-tertiary truncate">{stat.label}</span>
         </div>
       ))}
     </div>

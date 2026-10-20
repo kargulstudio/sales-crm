@@ -36,7 +36,7 @@ function DropdownMenuContent({
         sideOffset={sideOffset}
         align={align}
         className={cn(
-          "border-line-strong bg-popover text-popover-foreground data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:ease-power3-in data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:ease-power3-out z-50 min-w-[168px] overflow-hidden rounded-lg border shadow-overlay duration-200 data-[state=closed]:duration-150",
+          "border-line-strong bg-popover text-popover-foreground data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:ease-power3-in data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:ease-power3-out z-overlay shadow-overlay duration-base data-[state=closed]:duration-fast min-w-42 overflow-hidden rounded-lg border",
           className,
         )}
         {...props}
@@ -57,7 +57,7 @@ function DropdownMenuItem({
     <DropdownMenuPrimitive.Item
       data-slot="dropdown-menu-item"
       className={cn(
-        "caption-style text-foreground ease-power3-out relative flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 transition-colors duration-150 outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-white/6",
+        "caption-style text-foreground ease-power3-out duration-fast data-[highlighted]:bg-overlay-2 relative flex cursor-pointer items-center gap-2 rounded-sm px-2 py-2 transition-colors outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
       {...props}
@@ -85,14 +85,14 @@ function DropdownMenuRadioItem({
     <DropdownMenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
       className={cn(
-        "caption-style text-soft ease-power3-out data-[highlighted]:text-foreground data-[state=checked]:text-foreground relative flex cursor-pointer items-center gap-2 rounded-md py-2 pr-2 pl-6 transition-colors duration-150 outline-none select-none data-[highlighted]:bg-white/6",
+        "caption-style text-fg-secondary ease-power3-out data-[highlighted]:text-foreground data-[state=checked]:text-foreground duration-fast data-[highlighted]:bg-overlay-2 relative flex cursor-pointer items-center gap-2 rounded-sm py-2 pr-2 pl-6 transition-colors outline-none select-none",
         className,
       )}
       {...props}
     >
       <span className="absolute left-2 flex size-2 items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
-          <span className="bg-status block size-1.5 rounded-full" />
+          <span className="bg-selected block size-1.5 rounded-full" />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
       {children}
@@ -107,7 +107,7 @@ function DropdownMenuLabel({
   return (
     <DropdownMenuPrimitive.Label
       data-slot="dropdown-menu-label"
-      className={cn("caption-style text-subtle px-2 py-1.5", className)}
+      className={cn("caption-style text-fg-tertiary px-2 py-1.5", className)}
       {...props}
     />
   );

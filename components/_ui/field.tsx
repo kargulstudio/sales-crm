@@ -29,7 +29,7 @@ export default function Field({
         <Label htmlFor={htmlFor}>
           {label}
           {required && (
-            <span aria-hidden className="text-subtle">
+            <span aria-hidden className="text-fg-tertiary">
               {" "}
               *
             </span>
@@ -42,7 +42,7 @@ export default function Field({
         <span
           id={`${htmlFor}-error`}
           role="alert"
-          className="caption-style text-danger block"
+          className="caption-style text-danger block leading-snug"
         >
           {error}
         </span>
@@ -50,7 +50,7 @@ export default function Field({
         hint && (
           <span
             id={`${htmlFor}-hint`}
-            className="caption-style text-subtle block"
+            className="caption-style text-fg-tertiary block leading-snug"
           >
             {hint}
           </span>

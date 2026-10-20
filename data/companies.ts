@@ -1,4 +1,9 @@
-export const SEGMENTS = ["Enterprise", "Mid-Market", "SMB", "Strategic"] as const;
+export const SEGMENTS = [
+  "Enterprise",
+  "Mid-Market",
+  "SMB",
+  "Strategic",
+] as const;
 
 export const STAGES = [
   "New Logo",
@@ -82,20 +87,26 @@ export const OWNERS: Owner[] = OWNER_NAMES.map((name, i) => ({
   role: i % 3 === 0 ? "Senior Account Executive" : "Account Executive",
 }));
 
-export const CURRENT_USER: Owner = {
-  name: "Jensen Ackles",
-  avatar: "/assets/images/_common/avatars/jensen.png",
-  email: "jensen.ackles@crm.com",
-  phone: "+1 (202) 184-5501",
-  role: "Head of Sales",
-};
-
 export function ownerByName(name: string): Owner {
   return OWNERS.find((owner) => owner.name === name) ?? OWNERS[0];
 }
 
-export function profileByName(name: string): Owner {
-  return name === CURRENT_USER.name ? CURRENT_USER : ownerByName(name);
+export function profileByName(
+  name: string,
+  viewer?: { name: string; email: string } | null,
+): Owner {
+  if (viewer && name === viewer.name) {
+    return { name, email: viewer.email, avatar: "", phone: "", role: "You" };
+  }
+  return (
+    OWNERS.find((owner) => owner.name === name) ?? {
+      name,
+      avatar: "",
+      email: "",
+      phone: "",
+      role: "Teammate",
+    }
+  );
 }
 
 export type Company = {
@@ -109,6 +120,7 @@ export type Company = {
   trend: number[];
   lastInteraction: { date: string; label: string };
   activityDays: number;
+  domain?: string;
   logo?: string;
 };
 
@@ -136,7 +148,7 @@ const TREND_B = [4, 4, 5, 5, 2, 7, 11, 7, 5, 7, 5, 3, 7, 14];
 const TREND_C = [4, 4, 10, 5, 2, 7, 11, 7, 11, 7, 11, 7, 7, 14];
 const TREND_D = [4, 4, 5, 12, 5, 7, 11, 3, 11, 3, 11, 3, 7, 14];
 
-const COMPANY_RECORDS: Omit<Company, "logo">[] = [
+const COMPANY_RECORDS: Omit<Company, "logo" | "domain">[] = [
   {
     id: "lvmh",
     name: "LVMH",
@@ -355,9 +367,30 @@ const COMPANY_RECORDS: Omit<Company, "logo">[] = [
   },
 ];
 
+export const COMPANY_DOMAINS: Record<string, string> = {
+  lvmh: "lvmh.com",
+  disney: "disney.com",
+  paypal: "paypal.com",
+  "united-airlines": "united.com",
+  apple: "apple.com",
+  microsoft: "microsoft.com",
+  airbnb: "airbnb.com",
+  intercom: "intercom.com",
+  attio: "attio.com",
+  google: "google.com",
+  netflix: "netflix.com",
+  spotify: "spotify.com",
+  shopify: "shopify.com",
+  zoom: "zoom.us",
+  slack: "slack.com",
+  stripe: "stripe.com",
+  snowflake: "snowflake.com",
+  hubspot: "hubspot.com",
+};
+
 export const COMPANIES: Company[] = COMPANY_RECORDS.map((company) => ({
   ...company,
-  logo: `/assets/images/companies/logos/${company.id}.svg`,
+  domain: COMPANY_DOMAINS[company.id],
 }));
 
 export const SORT_OPTIONS = [
@@ -389,7 +422,11 @@ export const ACTIVITY_WINDOWS = [7, 30, 60, 90] as const;
 
 export type ActivityWindow = (typeof ACTIVITY_WINDOWS)[number];
 
-export const TREND_WINDOWS = ["Last 7 Days", "Last 30 Days", "Last 90 Days"];
+export const TREND_WINDOWS = [
+  "Last 7 Days",
+  "Last 30 Days",
+  "Last 90 Days",
+] as const;
 
 export type ScoreCard = {
   title: string;
@@ -409,7 +446,7 @@ export const SCORE_CARDS: ScoreCard[] = [
     reviewer: "Emma Green",
     reviewerAvatar: "/assets/images/_common/avatars/detail-2.png",
     updated: "Updated 2h ago",
-    verdict: "High potential SN",
+    verdict: "High potential",
     stars: 4,
   },
   {
@@ -419,17 +456,17 @@ export const SCORE_CARDS: ScoreCard[] = [
     reviewer: "Ricky Brown",
     reviewerAvatar: "/assets/images/_common/avatars/detail-3.png",
     updated: "Updated 2h ago",
-    verdict: "High potential SN",
+    verdict: "High potential",
     stars: 4,
   },
   {
-    title: "Technical fit",
+    title: "Relationship strength",
     description:
-      "Evaluates technical compatibility, security requirements, and integration readiness.",
+      "Evaluates champion engagement, executive access, and buying-committee coverage.",
     reviewer: "Taylor Leroy",
     reviewerAvatar: "/assets/images/_common/avatars/detail-1.png",
-    updated: "Updated 2h ago",
-    verdict: "High potential SN",
-    stars: 4,
+    updated: "Updated 1d ago",
+    verdict: "Needs work",
+    stars: 3,
   },
 ];

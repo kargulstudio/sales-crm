@@ -33,8 +33,10 @@ import {
   ALL_OWNERS,
   activeFilterCount,
   filterCompanies,
+  pickFilters,
 } from "@/lib/companies";
 import { cn } from "@/lib/utils";
+import { useShallow } from "zustand/react/shallow";
 import { useCompaniesStore } from "@/stores/companies-store";
 import FilterIcon from "@/public/assets/images/_common/filter.svg";
 import XIcon from "@/public/assets/images/companies/detail/x.svg";
@@ -58,13 +60,11 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
   );
   const resetFilters = useCompaniesStore((state) => state.resetFilters);
 
-  const filters = { sortBy, owner, stage, activityWindow };
+  const filters = useCompaniesStore(useShallow(pickFilters));
   const activeCount = activeFilterCount(filters);
   const resultCount = useMemo(
-    () =>
-      filterCompanies(companies, { sortBy, owner, stage, activityWindow })
-        .length,
-    [companies, sortBy, owner, stage, activityWindow],
+    () => filterCompanies(companies, filters).length,
+    [companies, filters],
   );
 
   return (
@@ -94,7 +94,7 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
             <Button
               variant="ghost"
               size="icon-sm"
-              className="-mr-1"
+              className="-mr-2"
               aria-label="Close filters"
             >
               <XIcon aria-hidden className="text-foreground size-4" />
@@ -188,7 +188,7 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
             size="sm"
             onClick={resetFilters}
             disabled={activeCount === 0 && sortBy === "pipelineValue"}
-            className="-ml-1.5"
+            className="-ml-2.25"
           >
             Reset
           </Button>

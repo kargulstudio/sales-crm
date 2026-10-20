@@ -35,14 +35,16 @@ import {
   type Segment,
   type Stage,
 } from "@/data/companies";
-import { TODAY, daysSince } from "@/lib/companies";
+import { TODAY, daysSince, normalizeDomain } from "@/lib/companies";
 import { slugify } from "@/lib/utils";
 import { useCompaniesStore } from "@/stores/companies-store";
+import { toast } from "@/stores/toast-store";
 import PlusIcon from "@/public/assets/images/_common/plus.svg";
 
 type FormState = {
   logo: string | null;
   name: string;
+  website: string;
   segment: Segment;
   stage: Stage;
   owner: string;
@@ -56,6 +58,7 @@ type FormState = {
 const EMPTY_FORM: FormState = {
   logo: null,
   name: "",
+  website: "",
   segment: SEGMENTS[0],
   stage: STAGES[0],
   owner: OWNERS[0].name,
@@ -72,6 +75,8 @@ export default function NewCompanyDialog() {
   const addCompany = useCompaniesStore((state) => state.addCompany);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [nameError, setNameError] = useState<string | null>(null);
+  const [websiteError, setWebsiteError] = useState<string | null>(null);
+  const domain = normalizeDomain(form.website);
   const nameRef = useRef<HTMLInputElement>(null);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -87,10 +92,16 @@ export default function NewCompanyDialog() {
       return;
     }
 
+    if (form.website.trim() && !domain) {
+      setWebsiteError("Enter a domain like acme.com.");
+      return;
+    }
+
     const company: Company = {
       id: `${slugify(name)}-${Date.now()}`,
       name,
       logo: form.logo ?? undefined,
+      domain: domain ?? undefined,
       tags: [form.segment, form.stage],
       owner: form.owner,
       openDeals: Math.max(0, Math.round(Number(form.openDeals) || 0)),
@@ -104,15 +115,16 @@ export default function NewCompanyDialog() {
       activityDays: daysSince(form.interactionDate || TODAY),
     };
 
-    addCompany(company);
+    toast(`Added ${company.name}`, addCompany(company));
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className="max-w-[560px]"
+        className="max-w-140"
         onCloseAutoFocus={() => {
           setForm(EMPTY_FORM);
+          setWebsiteError(null);
           setNameError(null);
         }}
       >
@@ -128,6 +140,7 @@ export default function NewCompanyDialog() {
             <LogoUpload
               value={form.logo}
               companyName={form.name}
+              domain={domain}
               onChange={(logo) => update("logo", logo)}
             />
 
@@ -151,6 +164,36 @@ export default function NewCompanyDialog() {
                 aria-describedby={nameError ? "company-name-error" : undefined}
                 className="aria-invalid:border-danger"
                 autoFocus
+              />
+            </Field>
+
+            <Field
+              label="Website"
+              htmlFor="company-website"
+              hint={
+                websiteError ? undefined : "Used to fetch the company logo."
+              }
+              error={websiteError ?? undefined}
+            >
+              <Input
+                id="company-website"
+                type="text"
+                inputMode="url"
+                autoComplete="url"
+                spellCheck={false}
+                value={form.website}
+                onChange={(event) => {
+                  update("website", event.target.value);
+                  if (websiteError) setWebsiteError(null);
+                }}
+                placeholder="acme.com"
+                aria-invalid={websiteError ? true : undefined}
+                aria-describedby={
+                  websiteError
+                    ? "company-website-error"
+                    : "company-website-hint"
+                }
+                className="aria-invalid:border-danger"
               />
             </Field>
 
@@ -219,7 +262,7 @@ export default function NewCompanyDialog() {
                 <div className="relative">
                   <span
                     aria-hidden
-                    className="text-subtle pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[14px] leading-none"
+                    className="text-fg-tertiary pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-sm leading-none"
                   >
                     $
                   </span>
@@ -273,15 +316,15 @@ export default function NewCompanyDialog() {
                 <SegmentBar
                   percent={form.winProbability}
                   segments={40}
-                  className="h-3 w-full border border-white/4 px-px"
+                  className="border-overlay-1 h-3 w-full border px-px"
                   segmentClassName="h-2"
-                  trackClassName="bg-white/8"
+                  trackClassName="bg-overlay-3"
                 />
               </div>
             </Field>
           </FormSection>
 
-          <FormSection title="Last interaction">
+          <FormSection title="Last interaction" className="shadow-none">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Date" htmlFor="company-interaction-date">
                 <Input
